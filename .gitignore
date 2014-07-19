@@ -1,0 +1,16 @@
+/bin
+/.idea
+/.gradle
+/.luaMods
+/bin
+/admin
+/build
+/libs
+/Models
+.project
+build.properties
+formatter.xml
+Network.iml
+.classpath
+/dep
+!/dep/mmc.jar
