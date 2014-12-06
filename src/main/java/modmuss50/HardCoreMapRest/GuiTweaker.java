@@ -12,7 +12,7 @@ import java.util.List;
 public class GuiTweaker {
 
 
-    public static final int BUTTON_ID = 405;
+    public static final int BUTTON_ID = 406;
 
     @SubscribeEvent()
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post evt) {
