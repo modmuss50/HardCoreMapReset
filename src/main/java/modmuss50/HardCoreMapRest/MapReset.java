@@ -9,12 +9,8 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "1.1.0")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "1.2.0")
 public class MapReset {
-
-
-	public static boolean keepOldMaps = true;
-
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
 		File backupDir = new File(Minecraft.getMinecraft().mcDataDir, "maps");

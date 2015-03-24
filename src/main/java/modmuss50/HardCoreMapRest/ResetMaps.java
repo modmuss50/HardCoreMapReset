@@ -13,40 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class ResetMaps {
-
-	public static void resetMaps() {
-		if (!MapReset.keepOldMaps) {
-			Minecraft mc = Minecraft.getMinecraft();
-			File saveDir = new File(mc.mcDataDir, "saves");
-			File backupDir = new File(mc.mcDataDir, "maps");
-			deleteFolder(saveDir);
-			saveDir.mkdir();
-			try {
-				copyDirectory(backupDir, saveDir);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSelectWorld(new GuiMainMenu()));
-		} else {
-			Minecraft mc = Minecraft.getMinecraft();
-			File saveDir = new File(mc.mcDataDir, "saves");
-			File backupDir = new File(mc.mcDataDir, "maps");
-			String[] savechildren = saveDir.list();
-			String[] backchildren = backupDir.list();
-			for (int i = 0; i < savechildren.length; i++) {
-				for (int j = 0; j < backchildren.length; j++) {
-					if (savechildren[i].equals(backchildren[j])) {
-						System.out.println("found a map to restore" + savechildren[i] + ":" + backchildren[j]);
-						resetmap(savechildren[i]);
-					}
-				}
-			}
-
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSelectWorld(new GuiMainMenu()));
-		}
-	}
-
-
 	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
 			if (!targetLocation.exists()) {

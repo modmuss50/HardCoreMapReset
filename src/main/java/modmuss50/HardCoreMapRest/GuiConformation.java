@@ -46,12 +46,7 @@ public class GuiConformation extends GuiScreen {
 		this.drawCenteredString(this.fontRendererObj, "You will loose all of your progress and worlds.", this.width / 2, 70, 0xFFFFFF);
 		this.drawCenteredString(this.fontRendererObj, "Your save(s) will be reset back to default(s).", this.width / 2, 80, 0xFFFFFF);
 		this.drawCenteredString(this.fontRendererObj, "THIS CANNOT BE UNDONE! ", this.width / 2, this.height - 50, 0xff0000);
-		drawScreen2(x, y, f);
 		super.drawScreen(x, y, f);
-	}
-
-	public void drawScreen2(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
-
 	}
 
 	public void setParent(GuiScreen parent) {
