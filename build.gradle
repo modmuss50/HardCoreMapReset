@@ -19,7 +19,7 @@ buildscript {
 apply plugin: 'forge'
 
 minecraft {
-    version = "1.7.10-10.13.0.1182"
+    version = "1.7.10-10.13.2.1291"
 }
 
 group = 'modmuss50.network'
@@ -27,7 +27,7 @@ archivesBaseName = "HardCoreMapRest"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
-    version = "1.0." + "${System.getenv().BUILD_NUMBER}"
+    version = "1.1." + "${System.getenv().BUILD_NUMBER}"
 } else {
-    version = "1.0.BUILD"
+    version = "1.1.BUILD"
 }
