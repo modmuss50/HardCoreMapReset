@@ -60,7 +60,8 @@ public class ResetMaps {
 		File backupDir = new File(mc.mcDataDir, "maps");
 		File oldDir = new File(saveDir, name);
 		File newDir = new File(backupDir, name);
-		deleteFolder(oldDir);
+		if(oldDir.exists())
+			deleteFolder(oldDir);
 		oldDir.mkdir();
 		try {
 			copyDirectory(newDir, oldDir);

@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "1.2.0")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "1.2.1")
 public class MapReset {
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {

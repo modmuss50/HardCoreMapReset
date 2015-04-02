@@ -21,13 +21,9 @@ public class GuiMapList extends GuiScreen {
 		Minecraft mc = Minecraft.getMinecraft();
 		File saveDir = new File(mc.mcDataDir, "saves");
 		File backupDir = new File(mc.mcDataDir, "maps");
-		for (File saveFile : saveDir.listFiles()) {
-			if (saveFile.isDirectory()) {
-				for (File backupFile : backupDir.listFiles()) {
-					if (backupFile.getName().equals(saveFile.getName())) {
-						maps.add(saveFile.getName());
-					}
-				}
+		for (File backupFile : backupDir.listFiles()) {
+			if (backupFile.isDirectory()) {
+						maps.add(backupFile.getName());
 			}
 		}
 	}
