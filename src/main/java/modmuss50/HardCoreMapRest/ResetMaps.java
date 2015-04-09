@@ -2,8 +2,6 @@ package modmuss50.HardCoreMapRest;
 
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiSelectWorld;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +58,7 @@ public class ResetMaps {
 		File backupDir = new File(mc.mcDataDir, "maps");
 		File oldDir = new File(saveDir, name);
 		File newDir = new File(backupDir, name);
-		if(oldDir.exists())
+		if (oldDir.exists())
 			deleteFolder(oldDir);
 		oldDir.mkdir();
 		try {

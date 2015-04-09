@@ -23,7 +23,7 @@ public class GuiMapList extends GuiScreen {
 		File backupDir = new File(mc.mcDataDir, "maps");
 		for (File backupFile : backupDir.listFiles()) {
 			if (backupFile.isDirectory()) {
-						maps.add(backupFile.getName());
+				maps.add(backupFile.getName());
 			}
 		}
 	}
