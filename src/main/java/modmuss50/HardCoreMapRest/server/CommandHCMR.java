@@ -1,7 +1,6 @@
 package modmuss50.HardCoreMapRest.server;
 
 import modmuss50.HardCoreMapRest.MapReset;
-import modmuss50.HardCoreMapRest.server.packets.ChannelHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,7 +30,7 @@ public class CommandHCMR implements ICommand {
 		ArrayList<String> maps = new ArrayList<String>();
 		maps.add("test");
 		maps.add("hello");
-		ChannelHandler.sendPacketToAllPlayers(new PacketOpen(maps));
+		MapReset.networkWrapper.sendTo(new PacketOpen(maps), (EntityPlayerMP) player);
 	}
 
 	@Override

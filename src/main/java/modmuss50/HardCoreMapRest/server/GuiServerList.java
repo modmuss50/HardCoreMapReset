@@ -1,12 +1,11 @@
 package modmuss50.HardCoreMapRest.server;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import modmuss50.HardCoreMapRest.GuiConformation;
 import modmuss50.HardCoreMapRest.ToggleButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSelectWorld;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,9 @@ public class GuiServerList extends GuiScreen {
 	public GuiButton yesButton;
 
 	public GuiServerList(List<String> mapNames) {
-		maps.addAll(mapNames);
+		for (String map : mapNames) {
+			maps.add(map);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,6 +60,7 @@ public class GuiServerList extends GuiScreen {
 		}
 		if (guiButton.enabled && guiButton.id == no) {
 			this.onGuiClosed();
+			FMLClientHandler.instance().showGuiScreen(null);
 		}
 
 	}
@@ -84,4 +86,8 @@ public class GuiServerList extends GuiScreen {
 		super.drawScreen(x, y, f);
 	}
 
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
 }

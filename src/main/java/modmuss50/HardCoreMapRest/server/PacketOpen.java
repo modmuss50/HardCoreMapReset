@@ -4,49 +4,63 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import modmuss50.HardCoreMapRest.server.packets.SimplePacket;
+import net.minecraft.network.PacketBuffer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PacketOpen extends SimplePacket {
+public class PacketOpen implements IMessage, IMessageHandler<PacketOpen, IMessage> {
 
 	ArrayList<String> maps = new ArrayList<String>();
 	int amount;
 
+	public PacketOpen() {
+	}
+
+	;
+
 	public PacketOpen(ArrayList<String> names) {
-		this.maps.addAll(names);
+		for (String name : names) {
+			this.maps.add(name);
+			System.out.println(name);
+		}
 	}
 
 	@Override
-	public void readData(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf) {
 		amount = buf.readInt();
-//		for (int i = 0; i < amount; i++) {
-//			int nameLength = buf.readInt();
-//			String name = new String(buf.readBytes(nameLength).array());
-//			maps.add(name);
-//		}
+		PacketBuffer packetBuffer = new PacketBuffer(buf);
+		System.out.println(amount);
+		for (int i = 0; i < amount; i++) {
+			try {
+				maps.add(packetBuffer.readStringFromBuffer(999));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
-	public void writeData(ByteBuf buf) {
-		System.out.println(maps.size());
+	public void toBytes(ByteBuf buf) {
 		buf.writeInt(maps.size());
-//		for(String name : maps){
-//			buf.writeInt(name.length());
-//			buf.writeBytes(name.getBytes());
-//		}
+		PacketBuffer packetBuffer = new PacketBuffer(buf);
+		for (String name : maps) {
+			try {
+				packetBuffer.writeStringToBuffer(name);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
-
-
 
 
 	@Override
-	public void execute() {
-		FMLClientHandler.instance().showGuiScreen(new GuiServerList(maps));
+	public IMessage onMessage(PacketOpen message, MessageContext ctx) {
+		FMLClientHandler.instance().showGuiScreen(new GuiServerList(message.maps));
+		return null;
 	}
+
+
 }

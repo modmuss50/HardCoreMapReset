@@ -19,7 +19,6 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<SimplePacket
 	private static EnumMap<Side, FMLEmbeddedChannel> channels;
 
 	public ChannelHandler() {
-
 	}
 
 	public static EnumMap<Side, FMLEmbeddedChannel> getChannels() {
