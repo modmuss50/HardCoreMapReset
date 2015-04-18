@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-		mavenLocal()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -16,18 +15,127 @@ buildscript {
     }
 }
 
-apply plugin: 'forge'
-
-minecraft {
-    version = "1.7.10-10.13.0.1182"
+repositories {
+    maven {
+        name = "Modmuss50"
+        url = "http://modmuss50.me/maven/"
+    }
 }
 
-group = 'modmuss50.network'
-archivesBaseName = "HardCoreMapRest"
+apply plugin: 'forge'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
-    version = "1.0." + "${System.getenv().BUILD_NUMBER}"
+    version = "2.0." + "${System.getenv().BUILD_NUMBER}"
 } else {
-    version = "1.0.BUILD"
+    version = "2.0.BUILD"
 }
+
+minecraft {
+    version = "1.8-11.14.1.1313"
+    
+    mappings = "stable_16"
+}
+
+group = 'HardCoreMapReset'
+
+task deleteOldArtifacts(type: Delete) {
+    delete 'build/libs'
+}
+
+classes.dependsOn deleteOldArtifacts
+
+
+processResources
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include '*.info'
+
+                // replace version and mcversion
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude '**/*.info'
+            }
+        }
+        
+dependencies {
+    compile "ModmussCore:ModmussCore:2.0.+:dev"
+}        
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    appendix = 'src'
+    classifier = 'src'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    appendix = 'dev'
+    exclude "**/*.psd"
+    classifier = 'dev'
+}
+
+jar {
+    exclude "**/*.psd"
+    appendix = 'universal'
+    classifier = 'universal'
+}
+
+artifacts {
+    archives sourceJar
+    archives deobfJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///var/www/maven/")
+            pom {
+                groupId = "HardCoreMapReset"
+                version = project.version
+                artifactId = project.archivesBaseName
+                project {
+                    name project.archivesBaseName
+                    packaging 'jar'
+                    description 'HardCoreMapReset'
+                    url 'https://github.com/modmuss50/HardCoreMapReset'
+                    scm {
+                        url 'https://github.com/modmuss50/HardCoreMapReset'
+                        connection 'scm:git:git@github.com:modmuss50/HardCoreMapReset.git'
+                        developerConnection 'scm:git:git@github.com:modmuss50/HardCoreMapReset.git'
+                    }
+                    issueManagement {
+                        system 'github'
+                        url 'https://github.com/modmuss50/HardCoreMapReset/issues'
+                    }
+                    licenses {
+                        license {
+                            name 'License'
+                            url 'https://github.com/modmuss50/HardCoreMapReset/blob/master/LICENSE'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'modmuss50'
+                            name 'modmuss50'
+                            roles { role 'developer' }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+sourceSets { main { output.resourcesDir = output.classesDir } }

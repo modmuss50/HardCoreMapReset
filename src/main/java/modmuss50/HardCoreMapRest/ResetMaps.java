@@ -10,7 +10,7 @@ import java.io.*;
 public class ResetMaps {
 
     public static void resetMaps(){
-        if(!MapRest.keepOldMaps){
+        if(!MapReset.keepOldMaps){
             Minecraft mc = Minecraft.getMinecraft();
             File saveDir = new File(mc.mcDataDir, "saves");
             File backupDir = new File(mc.mcDataDir, "maps");
