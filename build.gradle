@@ -35,7 +35,7 @@ if (ENV.BUILD_NUMBER) {
 
 minecraft {
     version = "1.8-11.14.1.1313"
-
+    
     mappings = "stable_16"
 }
 
@@ -67,10 +67,10 @@ processResources
                 exclude '**/*.info'
             }
         }
-
+        
 dependencies {
     compile "ModmussCore:ModmussCore:2.0.+:dev"
-}
+}        
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
