@@ -1,96 +1,122 @@
 package modmuss50.HardCoreMapRest;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSelectWorld;
+import net.minecraft.client.AnvilConverterException;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class GuiMapList extends GuiScreen {
+	private static final Logger logger = LogManager.getLogger();
+	private static final int CREATE_BUTTON_ID = 0;
+	private static final int CANCEL_BUTTON_ID = 1;
 	public GuiScreen parent;
-	public ArrayList<String> maps = new ArrayList<String>();
-	public ArrayList<String> selectedMaps = new ArrayList<String>();
-	public int yes = 1;
-	public int no = 2;
-	public GuiButton yesButton;
+	private List saveList;
+	private GuiButton createButton;
+	private GuiTextField nameField;
+	private MapList mapList;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat();;
+	private int selectedSlot;
 
-	public GuiMapList() {
-		Minecraft mc = Minecraft.getMinecraft();
-		File saveDir = new File(mc.mcDataDir, "saves");
-		File backupDir = new File(mc.mcDataDir, "maps");
-		for (File backupFile : backupDir.listFiles()) {
-			if (backupFile.isDirectory()) {
-				maps.add(backupFile.getName());
-			}
-		}
+	public GuiMapList(GuiScreen parent) {
+		this.parent = parent;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
-		int id = 0;
-		for (String map : maps) {
-			this.buttonList.add(new ToggleButton(id, this.width / 2 - 100, (22 * id) + 30, map));
-			id++;
+		super.initGui();
+
+		try
+		{
+			initSaveList();
+		}
+		catch (AnvilConverterException anvilconverterexception)
+		{
+			logger.error("Couldn't load level list", anvilconverterexception);
+			this.mc.displayGuiScreen(new GuiErrorScreen("Unable to load worlds", anvilconverterexception.getMessage()));
+			return;
 		}
 
-		yes = id;
-		yesButton = new GuiButton(yes, 10, this.height - 38, "Reset maps");
-		this.buttonList.add(yesButton);
-		id++;
-		no = id;
-		this.buttonList.add(new GuiButton(id, this.width - 10 - 200, this.height - 38, "Cancel"));
+		this.nameField = new GuiTextField(this.fontRendererObj, this.width / 2 - 100, 45, 200, 20);
+		this.nameField.setFocused(true);
+		this.nameField.setText(I18n.format("selectWorld.newWorld"));
+
+		this.mapList = new MapList();
+
+		this.buttonList.add(this.createButton = new GuiButton(CREATE_BUTTON_ID, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("selectWorld.create")));
+		this.buttonList.add(new GuiButton(CANCEL_BUTTON_ID, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
+		this.createButton.enabled = false;
+	}
+
+	private void initSaveList() throws AnvilConverterException {
+		this.saveList = MapReset.saveLoader.getSaveList();
+		Collections.sort(this.saveList);
+		this.selectedSlot = -1;
 	}
 
 	@Override
 	public void actionPerformed(GuiButton guiButton) {
-		selectedMaps.clear();
-		for (Object button : this.buttonList) {
-			if (button instanceof ToggleButton) {
-				if (((ToggleButton) button).isOn) {
-					selectedMaps.add(((ToggleButton) button).displayString);
-				}
-			}
-		}
-		if (selectedMaps.isEmpty()) {
-			yesButton.enabled = false;
-		} else {
-			yesButton.enabled = true;
-		}
-		if (guiButton.enabled && guiButton.id == yes) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiConformation(selectedMaps));
-		}
-		if (guiButton.enabled && guiButton.id == no) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiSelectWorld(new GuiMainMenu()));
-		}
-
 	}
 
 	@Override
 	public void drawScreen(int x, int y, float f) {
 		this.drawDefaultBackground();
-		selectedMaps.clear();
-		for (Object button : this.buttonList) {
-			if (button instanceof ToggleButton) {
-				if (((ToggleButton) button).isOn) {
-					selectedMaps.add(((ToggleButton) button).displayString);
-				}
-			}
-		}
-		if (selectedMaps.isEmpty()) {
-			yesButton.enabled = false;
-		} else {
-			yesButton.enabled = true;
-		}
-		yesButton.displayString = "Reset " + selectedMaps.size() + " maps";
-		this.drawCenteredString(this.fontRendererObj, "Select the maps you want to reset.", this.width / 2, 10, 0xFFFFFF);
-		super.drawScreen(x, y, f);
+		mapList.drawScreen(x, y, f);
 	}
 
-	public void setParent(GuiScreen parent) {
-		this.parent = parent;
+	private class MapList extends GuiSlot {
+		public MapList() {
+			super(GuiMapList.this.mc, GuiMapList.this.width, GuiMapList.this.height, 78, GuiMapList.this.height - 32, 36);
+		}
+
+		@Override
+		protected int getSize() {
+			return GuiMapList.this.saveList.size();
+		}
+
+		@Override
+		protected void elementClicked(int slot, boolean doubleClicked, int mouseX, int mouseY) {
+
+		}
+
+		@Override
+		protected boolean isSelected(int slot) {
+			return false;
+		}
+
+		@Override
+		protected void drawBackground() {
+			GuiMapList.this.drawDefaultBackground();
+		}
+
+		@Override
+		protected void drawSlot(int slot, int x, int y, int slotHeight, Tessellator tessellator, int mouseX, int mouseY) {
+			TemplateSaveFormat saveFormat = (TemplateSaveFormat)GuiMapList.this.saveList.get(slot);
+
+			String displayName = saveFormat.getDisplayName();
+			String author = saveFormat.getAuthor();
+			String by = I18n.format("gui.hardcoremapreset.by");
+			String topLine = displayName + ", " + by + ": " + author;
+
+			String folder = saveFormat.getFileName();
+			String date = GuiMapList.this.dateFormat.format(new Date(saveFormat.getLastTimePlayed()));
+			String middleLine = folder + " (" + date + ")";
+
+			String mode = WordUtils.capitalize(saveFormat.getEnumGameType().getName());
+			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
+			String bottomLine = mode + ", " + cheats;
+
+			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine,    x + 2, y + 1,       16777215);
+			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 2, y + 12,      8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 2, y + 12 + 10, 8421504);
+		}
 	}
 }

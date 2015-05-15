@@ -23,6 +23,7 @@ public class MapReset {
 	public static MapReset INSTANCE;
 
 	public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
+	public static TemplateSaveLoader saveLoader;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -31,11 +32,9 @@ public class MapReset {
 
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
-		File backupDir = new File(Minecraft.getMinecraft().mcDataDir, "maps");
-		if (!backupDir.exists())
-			backupDir.mkdir();
+		saveLoader = new TemplateSaveLoader(new File(Minecraft.getMinecraft().mcDataDir, "maps"));
 
-		if (FMLCommonHandler.instance().getSide().isClient()) {
+				if (FMLCommonHandler.instance().getSide().isClient()) {
 			MinecraftForge.EVENT_BUS.register(new GuiTweaker());
 		}
 	}
