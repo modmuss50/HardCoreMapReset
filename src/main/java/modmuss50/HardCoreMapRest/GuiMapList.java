@@ -4,6 +4,7 @@ import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
@@ -117,6 +118,8 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine,    x + 2, y + 1,       16777215);
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 2, y + 12,      8421504);
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 2, y + 12 + 10, 8421504);
+
+			ResourceLocation thumbnail = saveFormat.getThumbnail();
 		}
 	}
 }
