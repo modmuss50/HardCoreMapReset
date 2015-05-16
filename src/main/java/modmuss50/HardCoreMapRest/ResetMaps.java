@@ -68,5 +68,27 @@ public class ResetMaps {
 		}
 	}
 
-
+	public static void copymap(String from, String to)
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		File saveDir = new File(mc.mcDataDir, "saves");
+		File backupDir = new File(mc.mcDataDir, "maps");
+		File oldDir = new File(saveDir, to);
+		File newDir = new File(backupDir, from);
+		if (oldDir.exists())
+		{
+			// TODO
+			System.err.println("TODO");
+			return;
+		}
+		oldDir.mkdir();
+		try
+		{
+			copyDirectory(newDir, oldDir);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
