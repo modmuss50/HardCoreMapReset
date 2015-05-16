@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiSelectWorld;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class GuiTweaker {
 	public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post evt) {
 		if (evt.gui instanceof GuiSelectWorld) {
 			List<GuiButton> buttonList = evt.buttonList;
-			GuiButton button = new GuiButton(BUTTON_ID, 1, 1, 150, 20, "Create From Template");
+			GuiButton button = new GuiButton(BUTTON_ID, 1, 1, 150, 20, I18n.format("gui.hardcoremapreset.create_button"));
 			buttonList.add(button);
 		}
 	}

@@ -1,12 +1,14 @@
 package modmuss50.HardCoreMapRest;
 
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.storage.SaveFormatComparator;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -31,21 +33,36 @@ public class TemplateSaveLoader extends AnvilSaveConverter
         {
             SaveFormatComparator save = (SaveFormatComparator)save_obj;
             String author = "Unknown";
-            ResourceLocation thumbnail = null;
+            BufferedImage thumbnail = null;
             try
             {
                 File mapsFolder = new File(Minecraft.getMinecraft().mcDataDir, "maps");
                 File mapFolder = new File(mapsFolder, save.getFileName());
-                File authorFile = new File(mapFolder, "author.txt");
+                File authorFile = new File(mapFolder, "info.json");
                 JsonReader reader = new JsonReader(new FileReader(authorFile));
 
-                reader.beginObject();
-                reader.skipValue();
-                author = reader.nextString();
-                reader.skipValue();
-                // TODO prepend save folder
-                thumbnail = new ResourceLocation(reader.nextString());
-                reader.endObject();
+                String key = "";
+                while (reader.hasNext()) {
+                    JsonToken type = reader.peek();
+                    if (type == JsonToken.BEGIN_OBJECT) {
+                        reader.beginObject();
+                    }
+                    else if (type == JsonToken.END_OBJECT) {
+                        reader.endObject();
+                    }
+                    else if (type == JsonToken.NAME) {
+                        key = reader.nextName();
+                    }
+                    else if (type == JsonToken.STRING) {
+                        if (key.compareTo("author") == 0) {
+                            author = reader.nextString();
+                        } else if (key.compareTo("thumbnail") == 0) {
+                            File thumbnailFile = null;
+                            thumbnailFile = new File(mapFolder, reader.nextString());
+                            thumbnail = ImageIO.read(thumbnailFile);
+                        }
+                    }
+                }
 
                 reader.close();
             }
