@@ -27,7 +27,7 @@ archivesBaseName = "HardCoreMapReset"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
-    version = "1.2." + "${System.getenv().BUILD_NUMBER}"
+    version = "ALPHA-2.0." + "${System.getenv().BUILD_NUMBER}"
 } else {
-    version = "1.2.1"
+    version = "ALPHA-2.0.0"
 }

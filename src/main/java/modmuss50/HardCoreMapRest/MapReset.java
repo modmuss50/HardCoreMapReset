@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "1.2.1", acceptableRemoteVersions = "*")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "ALPHA-2.0.0", acceptableRemoteVersions = "*")
 public class MapReset {
 
 	@Mod.Instance
@@ -24,6 +24,8 @@ public class MapReset {
 
 	public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
 	public static TemplateSaveLoader saveLoader;
+
+	public static boolean isDevVersion = false;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -41,7 +43,9 @@ public class MapReset {
 
 	@Mod.EventHandler
 	public void serverInit(FMLServerStartingEvent event) {
-		event.registerServerCommand(new CommandHCMR());
+		if(isDevVersion){
+			event.registerServerCommand(new CommandHCMR());
+		}
 	}
 
 
