@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "ALPHA-2.0.0", acceptableRemoteVersions = "*")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "2.0.0", acceptableRemoteVersions = "*")
 public class MapReset {
 
 	@Mod.Instance

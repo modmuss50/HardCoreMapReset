@@ -16,12 +16,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class GuiMapList extends GuiScreen {
 	private static final Logger logger = LogManager.getLogger();
@@ -75,7 +78,17 @@ public class GuiMapList extends GuiScreen {
 		for (Object save_obj : saveList)
 		{
 			TemplateSaveFormat save = (TemplateSaveFormat)save_obj;
-			save.setTexture(loadTexture(save.getThumbnail()));
+			if(save.getThumbnail() != null){
+				save.setTexture(loadTexture(save.getThumbnail()));
+			} else {
+				try {
+					Random rand = new Random();
+					int randomNum = rand.nextInt((4 - 0) + 1) + 0;
+					save.setTexture(loadTexture(ImageIO.read(GuiMapList.class.getResourceAsStream("/assets/minecraft/textures/gui/title/background/panorama_" + randomNum + ".png"))));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

@@ -9,9 +9,11 @@ import net.minecraft.world.storage.SaveFormatComparator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,17 @@ public class TemplateSaveLoader extends AnvilSaveConverter
                 File mapsFolder = new File(Minecraft.getMinecraft().mcDataDir, "maps");
                 File mapFolder = new File(mapsFolder, save.getFileName());
                 File authorFile = new File(mapFolder, "info.json");
+				if(!authorFile.exists()){
+					BufferedWriter writer = new BufferedWriter(new FileWriter(authorFile));
+					writer.write("{");
+					writer.newLine();
+					writer.write("  \"author\" : \"" + Minecraft.getMinecraft().getSession().getUsername() + "\",");
+					writer.newLine();
+					writer.write("  \"thumbnail\" : \"thumbnail.png\"");
+					writer.newLine();
+					writer.write("}");
+					writer.close();
+				}
                 JsonReader reader = new JsonReader(new FileReader(authorFile));
 
                 String key = "";
