@@ -1,6 +1,6 @@
 package modmuss50.HardCoreMapRest.server;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import modmuss50.HardCoreMapRest.GuiConformation;
 import modmuss50.HardCoreMapRest.ToggleButton;
 import net.minecraft.client.Minecraft;

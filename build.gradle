@@ -19,7 +19,8 @@ buildscript {
 apply plugin: 'forge'
 
 minecraft {
-    version = "1.7.10-10.13.2.1291"
+    version = "1.8-11.14.1.1419"
+    mappings = "snapshot_20141130"
 }
 
 group = 'modmuss50.network'
@@ -27,7 +28,7 @@ archivesBaseName = "HardCoreMapReset"
 
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
-    version = "2.0." + "${System.getenv().BUILD_NUMBER}"
+    version = "1.8-2.0." + "${System.getenv().BUILD_NUMBER}"
 } else {
-    version = "2.0.0"
+    version = "1.8-2.0.0"
 }
