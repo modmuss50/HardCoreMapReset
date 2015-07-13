@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "2.0.0", acceptableRemoteVersions = "*")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "2.1.0", acceptableRemoteVersions = "*")
 public class MapReset {
 	
 	@SidedProxy(clientSide = "modmuss50.HardCoreMapRest.proxy.ClientProxy", serverSide = "modmuss50.HardCoreMapRest.proxy.CommonProxy")
