@@ -14,6 +14,8 @@ import modmuss50.HardCoreMapRest.server.CommandHCMR;
 import modmuss50.HardCoreMapRest.server.PacketOpen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+
 import java.io.File;
 
 @Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "2.1.0", acceptableRemoteVersions = "*")
@@ -29,11 +31,23 @@ public class MapReset {
 	public static TemplateSaveLoader saveLoader;
 
 	public static boolean isDevVersion = false;
+    public static boolean showCreateWorld;
+
+    Configuration config;
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preinit();
+        config = new Configuration(new File(event.getModConfigurationDirectory(), "HardcoreMapReset.cfg"));
+        reLoadConfig();
 	}
+
+    public void reLoadConfig(){
+        config.load();
+        showCreateWorld = config.get(Configuration.CATEGORY_GENERAL, "Show Create World Button", true).getBoolean();
+        config.save();
+    }
+
 
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {

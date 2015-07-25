@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GuiTweaker {
 
@@ -17,12 +18,15 @@ public class GuiTweaker {
 	@SubscribeEvent()
 	public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post evt) {
 		if (evt.gui instanceof GuiSelectWorld) {
+            MapReset.INSTANCE.reLoadConfig();
 			List<GuiButton> buttonList = evt.buttonList;
 			ArrayList<Integer> buttonIDList = new ArrayList<Integer>();
 
 			// Width - 40 - (2 x 4) for spaces
 			int width = (evt.gui.width - 48) / 3;
 			int yPosition = 1;
+
+            boolean newWorldButton = MapReset.showCreateWorld;
 
 			boolean used = false;
 			for (GuiButton button : buttonList) {
@@ -32,11 +36,17 @@ public class GuiTweaker {
 					button.width = width;
 					button.xPosition = (evt.gui.width / 2) - (width / 2);
 					yPosition = button.yPosition;
+                    if(!newWorldButton){
+                        button.visible = false;
+                    }
 				}
 				// 1 - select
 				else if (button.id == 1) {
 					button.width = width;
 					button.xPosition = (evt.gui.width / 2) - (width / 2) - 4 - width;
+                    if(!newWorldButton){
+                        button.xPosition = (evt.gui.width / 2)- 4 - width;
+                    }
 				}
 				else if (button.id == BUTTON_ID) {
 					used = true;
@@ -52,6 +62,9 @@ public class GuiTweaker {
 				}
 			}
 			int xPosition = (evt.gui.width / 2) + (width / 2) + 4;
+            if(!newWorldButton){
+                xPosition = (evt.gui.width / 2);
+            }
 			GuiButton button = new GuiButton(BUTTON_ID, xPosition, yPosition, width, 20, I18n.format("gui.hardcoremapreset.create_button"));
 			buttonList.add(button);
 		}
