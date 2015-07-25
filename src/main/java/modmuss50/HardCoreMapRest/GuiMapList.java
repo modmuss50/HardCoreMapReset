@@ -1,5 +1,6 @@
 package modmuss50.HardCoreMapRest;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -107,7 +108,7 @@ public class GuiMapList extends GuiScreen {
 		else if (guiButton.id == CREATE_BUTTON_ID)
 		{
 			createMap();
-			Minecraft.getMinecraft().displayGuiScreen(parent);
+            FMLClientHandler.instance().tryLoadExistingWorld(new GuiSelectWorld(this), this.folderString, this.nameField.getText().trim());
 		}
 		else
 		{
