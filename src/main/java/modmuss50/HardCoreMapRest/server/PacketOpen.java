@@ -1,9 +1,9 @@
 package modmuss50.HardCoreMapRest.server;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
 
@@ -34,11 +34,7 @@ public class PacketOpen implements IMessage, IMessageHandler<PacketOpen, IMessag
 		PacketBuffer packetBuffer = new PacketBuffer(buf);
 		System.out.println(amount);
 		for (int i = 0; i < amount; i++) {
-			try {
-				maps.add(packetBuffer.readStringFromBuffer(999));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			maps.add(packetBuffer.readStringFromBuffer(999));
 		}
 	}
 
@@ -47,11 +43,7 @@ public class PacketOpen implements IMessage, IMessageHandler<PacketOpen, IMessag
 		buf.writeInt(maps.size());
 		PacketBuffer packetBuffer = new PacketBuffer(buf);
 		for (String name : maps) {
-			try {
-				packetBuffer.writeStringToBuffer(name);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			packetBuffer.writeString(name);
 		}
 	}
 

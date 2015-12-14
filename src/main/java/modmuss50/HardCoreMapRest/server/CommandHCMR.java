@@ -4,6 +4,7 @@ import modmuss50.HardCoreMapRest.MapReset;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +35,15 @@ public class CommandHCMR implements ICommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender player) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender player, String[] args) {
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		return null;
 	}
+
 
 	@Override
 	public boolean isUsernameIndex(String[] player, int p_82358_2_) {
@@ -49,7 +51,7 @@ public class CommandHCMR implements ICommand {
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(ICommand o) {
 		return 0;
 	}
 }

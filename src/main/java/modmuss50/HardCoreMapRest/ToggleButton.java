@@ -23,11 +23,11 @@ public class ToggleButton extends GuiButton {
 	@Override
 	public void drawButton(Minecraft minecraft, int x, int y) {
 		if (this.visible) {
-			FontRenderer fontrenderer = minecraft.fontRenderer;
+			FontRenderer fontrenderer = minecraft.fontRendererObj;
 			minecraft.getTextureManager().bindTexture(buttonTextures);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.field_146123_n = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
-			boolean bool = this.field_146123_n;
+			this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+			boolean bool = this.hovered;
 			if (isOn) {
 				bool = true;
 			}
@@ -46,7 +46,7 @@ public class ToggleButton extends GuiButton {
 				l = 10526880;
 			} else if (this.isOn) {
 				l = Color.green.getRGB();
-			} else if (this.field_146123_n) {
+			} else if (this.hovered) {
 				l = 16777120;
 			}
 

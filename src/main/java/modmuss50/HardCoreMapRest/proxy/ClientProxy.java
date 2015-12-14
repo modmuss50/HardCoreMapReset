@@ -2,10 +2,10 @@ package modmuss50.HardCoreMapRest.proxy;
 
 import java.io.File;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 import modmuss50.HardCoreMapRest.GuiTweaker;
 import modmuss50.HardCoreMapRest.MapReset;
 import modmuss50.HardCoreMapRest.TemplateSaveLoader;

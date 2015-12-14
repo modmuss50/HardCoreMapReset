@@ -1,6 +1,8 @@
 package modmuss50.HardCoreMapRest;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -63,7 +65,7 @@ public class GuiMapList extends GuiScreen {
 
 		loadSaveThumbnails();
 
-		this.nameField = new GuiTextField(this.fontRendererObj, this.width / 2 - 100, 45, 200, 20);
+		this.nameField = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 100, 45, 200, 20);
 		this.nameField.setFocused(true);
 		this.nameField.setText(I18n.format("selectWorld.newWorld"));
 		sanitizeFolderName();
@@ -138,7 +140,7 @@ public class GuiMapList extends GuiScreen {
 		ISaveFormat saveLoader = this.mc.getSaveLoader();
 		this.folderString = this.nameField.getText().trim();
 		this.folderString = this.folderString.replaceAll("[\\./\"]", "_");
-		char[] achar = ChatAllowedCharacters.allowedCharacters;
+		char[] achar = ChatAllowedCharacters.allowedCharactersArray;
 		int i = achar.length;
 
 		for (int j = 0; j < i; ++j)
@@ -217,7 +219,7 @@ public class GuiMapList extends GuiScreen {
 		}
 
 		@Override
-		protected void drawSlot(int slot, int x, int y, int slotHeight, Tessellator tessellator, int mouseX, int mouseY) {
+		protected void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
 			TemplateSaveFormat saveFormat = (TemplateSaveFormat)GuiMapList.this.saveList.get(slot);
 
 			String displayName = saveFormat.getDisplayName();
@@ -238,12 +240,14 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 34, y + 12 + 10, 8421504);
 
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
-			tessellator.startDrawingQuads();
-			tessellator.setColorOpaque(255, 255, 255);
-			tessellator.addVertexWithUV(x, y + 32, zLevel, 0, 1);
-			tessellator.addVertexWithUV(x + 32, y + 32, zLevel, 1, 1);
-			tessellator.addVertexWithUV(x + 32, y, zLevel, 1, 0);
-			tessellator.addVertexWithUV(x, y, zLevel, 0, 0);
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+			//worldrenderer.setColorOpaque(255, 255, 255);
+			worldrenderer.pos(x, y + 32, zLevel);
+			worldrenderer.pos(x + 32, y + 32, zLevel);
+			worldrenderer.pos(x + 32, y, zLevel);
+			worldrenderer.pos(x, y, zLevel);
 			tessellator.draw();
 		}
 	}

@@ -11,7 +11,7 @@ public class TemplateSaveFormat extends SaveFormatComparator {
     private int textureID;
 
     public TemplateSaveFormat(SaveFormatComparator other, String author, BufferedImage thumbnail) {
-        super(other.getFileName(), other.getDisplayName(), other.getLastTimePlayed(), other.func_154336_c(),
+        super(other.getFileName(), other.getDisplayName(), other.getLastTimePlayed(), other.getSizeOnDisk(),
               other.getEnumGameType(), other.requiresConversion(), other.isHardcoreModeEnabled(),
               other.getCheatsEnabled());
         this.author = author;
