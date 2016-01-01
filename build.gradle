@@ -35,8 +35,8 @@ if (ENV.BUILD_NUMBER) {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 minecraft {
-    version = "1.8.8-11.15.0.1609-1.8.8"
-    mappings = 'snapshot_20151205'
+    version = "1.8.9-11.15.0.1658"
+    mappings = 'snapshot_20151230'
     runDir = "run"
     replace "@MODVERSION@", project.version
 }
