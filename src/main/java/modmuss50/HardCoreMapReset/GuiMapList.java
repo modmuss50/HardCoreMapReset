@@ -13,10 +13,11 @@ import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.SaveFormatComparator;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-import reborncore.common.util.LogHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GuiMapList extends GuiScreen {
-    private static final LogHelper logger = new LogHelper(MapReset.INSTANCE);
+    private static final Logger logger = LogManager.getLogger();
     private static final int CREATE_BUTTON_ID = 0;
     private static final int CANCEL_BUTTON_ID = 1;
     public GuiScreen parent;
@@ -40,7 +41,7 @@ public class GuiMapList extends GuiScreen {
     private SimpleDateFormat dateFormat = new SimpleDateFormat();
     private int selectedSlot;
     private String folderString;
-    private static final String[] portNames = new String[]{"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+    private static final String[] portNames = new String[] {"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
     public GuiMapList(GuiScreen parent) {
         this.parent = parent;
@@ -51,10 +52,13 @@ public class GuiMapList extends GuiScreen {
     public void initGui() {
         super.initGui();
 
-        try {
+        try
+        {
             initSaveList();
-        } catch (AnvilConverterException anvilconverterexception) {
-            logger.error("Couldn't load level list " + anvilconverterexception);
+        }
+        catch (AnvilConverterException anvilconverterexception)
+        {
+            logger.error("Couldn't load level list", anvilconverterexception);
             this.mc.displayGuiScreen(new GuiErrorScreen("Unable to load worlds", anvilconverterexception.getMessage()));
             return;
         }
@@ -74,9 +78,10 @@ public class GuiMapList extends GuiScreen {
     }
 
     private void loadSaveThumbnails() {
-        for (Object save_obj : saveList) {
-            TemplateSaveFormat save = (TemplateSaveFormat) save_obj;
-            if (save.getThumbnail() != null) {
+        for (Object save_obj : saveList)
+        {
+            TemplateSaveFormat save = (TemplateSaveFormat)save_obj;
+            if(save.getThumbnail() != null){
                 save.setTexture(loadTexture(save.getThumbnail()));
             } else {
                 try {
@@ -97,39 +102,55 @@ public class GuiMapList extends GuiScreen {
     }
 
     @Override
-    public void actionPerformed(GuiButton guiButton) {
-        if (guiButton.id == CANCEL_BUTTON_ID) {
+    public void actionPerformed(GuiButton guiButton) throws IOException {
+        super.actionPerformed(guiButton);
+        if (guiButton.id == CANCEL_BUTTON_ID)
+        {
             Minecraft.getMinecraft().displayGuiScreen(parent);
-        } else if (guiButton.id == CREATE_BUTTON_ID) {
+        }
+        else if (guiButton.id == CREATE_BUTTON_ID)
+        {
             createMap();
             FMLClientHandler.instance().tryLoadExistingWorld(new GuiSelectWorld(this), this.folderString, this.nameField.getText().trim());
-        } else {
-            mapList.actionPerformed(guiButton);
         }
+        mapList.actionPerformed(guiButton);
     }
 
     @Override
-    protected void keyTyped(char keyChar, int keyCode) {
-        if (keyCode == 28 || keyCode == 156) {
-            this.actionPerformed((GuiButton) this.buttonList.get(0));
+    protected void keyTyped(char keyChar, int keyCode) throws IOException {
+        if (keyCode == 28 || keyCode == 156)
+        {
+            this.actionPerformed((GuiButton)this.buttonList.get(0));
         }
 
-        if (this.nameField.isFocused()) {
+        if (this.nameField.isFocused())
+        {
             this.nameField.textboxKeyTyped(keyChar, keyCode);
         }
 
         this.sanitizeFolderName();
     }
 
+    /**
+     * Handles mouse input.
+     */
+    public void handleMouseInput() throws IOException
+    {
+        super.handleMouseInput();
+        this.mapList.handleMouseInput();
+    }
+
     // TODO Cleanup
-    public void sanitizeFolderName() {
+    public void sanitizeFolderName()
+    {
         ISaveFormat saveLoader = this.mc.getSaveLoader();
         this.folderString = this.nameField.getText().trim();
         this.folderString = this.folderString.replaceAll("[\\./\"]", "_");
         char[] achar = ChatAllowedCharacters.allowedCharactersArray;
         int i = achar.length;
 
-        for (int j = 0; j < i; ++j) {
+        for (int j = 0; j < i; ++j)
+        {
             char c0 = achar[j];
             this.folderString = this.folderString.replace(c0, '_');
         }
@@ -137,14 +158,17 @@ public class GuiMapList extends GuiScreen {
         String[] astring = GuiMapList.portNames;
         i = astring.length;
 
-        for (int j = 0; j < i; ++j) {
+        for (int j = 0; j < i; ++j)
+        {
             String s0 = astring[j];
-            if (this.folderString.equalsIgnoreCase(s0)) {
+            if (this.folderString.equalsIgnoreCase(s0))
+            {
                 this.folderString = "_" + this.folderString + "_";
             }
         }
 
-        while (saveLoader.getWorldInfo(this.folderString) != null) {
+        while (saveLoader.getWorldInfo(this.folderString) != null)
+        {
             this.folderString = this.folderString + "-";
         }
     }
@@ -169,12 +193,12 @@ public class GuiMapList extends GuiScreen {
             return GuiMapList.this.saveList.size();
         }
 
-        @Override
         protected void elementClicked(int slot, boolean doubleClicked, int mouseX, int mouseY) {
             GuiMapList.this.selectedSlot = slot;
             GuiMapList.this.createButton.enabled = true;
 
-            if (doubleClicked) {
+            if (doubleClicked)
+            {
                 GuiMapList.this.createMap();
             }
         }
@@ -201,7 +225,7 @@ public class GuiMapList extends GuiScreen {
 
         @Override
         protected void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
-            TemplateSaveFormat saveFormat = (TemplateSaveFormat) GuiMapList.this.saveList.get(slot);
+            TemplateSaveFormat saveFormat = (TemplateSaveFormat)GuiMapList.this.saveList.get(slot);
 
             String displayName = saveFormat.getDisplayName();
             String author = saveFormat.getAuthor();
@@ -216,8 +240,8 @@ public class GuiMapList extends GuiScreen {
             String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
             String bottomLine = mode + ", " + cheats;
 
-            GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine, x + 34, y + 1, 16777215);
-            GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 34, y + 12, 8421504);
+            GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine,    x + 34, y + 1,       16777215);
+            GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 34, y + 12,      8421504);
             GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 34, y + 12 + 10, 8421504);
 
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
@@ -234,7 +258,10 @@ public class GuiMapList extends GuiScreen {
     }
 
     private void createMap() {
-        SaveFormatComparator saveformatcomparator = (SaveFormatComparator) GuiMapList.this.saveList.get(this.selectedSlot);
+        if(this.selectedSlot == -1){
+            return;
+        }
+        SaveFormatComparator saveformatcomparator = (SaveFormatComparator)GuiMapList.this.saveList.get(this.selectedSlot);
         ResetMaps.copymap(saveformatcomparator.getFileName(), this.folderString);
         Minecraft.getMinecraft().getSaveLoader().renameWorld(this.folderString, this.nameField.getText().trim());
     }
@@ -274,7 +301,7 @@ public class GuiMapList extends GuiScreen {
     @Override
     public void onGuiClosed() {
         for (Object save_obj : saveList) {
-            TemplateSaveFormat save = (TemplateSaveFormat) save_obj;
+            TemplateSaveFormat save = (TemplateSaveFormat)save_obj;
             int textureID = save.getTexture();
             GL11.glDeleteTextures(textureID);
         }
