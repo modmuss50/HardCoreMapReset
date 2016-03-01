@@ -1,13 +1,11 @@
 package modmuss50.HardCoreMapReset;
 
 import modmuss50.HardCoreMapReset.proxy.CommonProxy;
-import modmuss50.HardCoreMapReset.server.CommandHCMR;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import reborncore.common.IModInfo;
@@ -26,7 +24,6 @@ public class MapReset implements IModInfo {
     public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
     public static TemplateSaveLoader saveLoader;
 
-    public static boolean isDevVersion = false;
     public static boolean showCreateWorld;
 
     Configuration config;
@@ -48,13 +45,6 @@ public class MapReset implements IModInfo {
     @Mod.EventHandler
     public void load(FMLInitializationEvent event) {
         proxy.init();
-    }
-
-    @Mod.EventHandler
-    public void serverInit(FMLServerStartingEvent event) {
-        if (isDevVersion) {
-            event.registerServerCommand(new CommandHCMR());
-        }
     }
 
     @Override
