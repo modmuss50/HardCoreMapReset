@@ -15,55 +15,54 @@ import java.io.File;
 @Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "@MODVERSION@", acceptableRemoteVersions = "*", dependencies = "required-after:reborncore")
 public class MapReset implements IModInfo {
 
-    @SidedProxy(clientSide = "modmuss50.HardCoreMapReset.proxy.ClientProxy", serverSide = "modmuss50.HardCoreMapReset.proxy.CommonProxy")
-    public static CommonProxy proxy;
+	@SidedProxy(clientSide = "modmuss50.HardCoreMapReset.proxy.ClientProxy", serverSide = "modmuss50.HardCoreMapReset.proxy.CommonProxy")
+	public static CommonProxy proxy;
 
-    @Mod.Instance
-    public static MapReset INSTANCE;
+	@Mod.Instance
+	public static MapReset INSTANCE;
 
-    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
-    public static TemplateSaveLoader saveLoader;
+	public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
 
-    public static boolean showCreateWorld;
+	public static boolean showCreateWorld;
 
-    Configuration config;
+	Configuration config;
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        proxy.preinit();
-        config = new Configuration(new File(event.getModConfigurationDirectory(), "HardcoreMapReset.cfg"));
-        reLoadConfig();
-    }
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		proxy.preinit();
+		config = new Configuration(new File(event.getModConfigurationDirectory(), "HardcoreMapReset.cfg"));
+		reLoadConfig();
+	}
 
-    public void reLoadConfig() {
-        config.load();
-        showCreateWorld = config.get(Configuration.CATEGORY_GENERAL, "Show Create World Button", true).getBoolean();
-        config.save();
-    }
+	public void reLoadConfig() {
+		config.load();
+		showCreateWorld = config.get(Configuration.CATEGORY_GENERAL, "Show Create World Button", true).getBoolean();
+		config.save();
+	}
 
 
-    @Mod.EventHandler
-    public void load(FMLInitializationEvent event) {
-        proxy.init();
-    }
+	@Mod.EventHandler
+	public void load(FMLInitializationEvent event) {
+		proxy.init();
+	}
 
-    @Override
-    public String MOD_NAME() {
-        return "HardcoreMapReset";
-    }
+	@Override
+	public String MOD_NAME() {
+		return "HardcoreMapReset";
+	}
 
-    @Override
-    public String MOD_ID() {
-        return "hardcoremapreset";
-    }
+	@Override
+	public String MOD_ID() {
+		return "hardcoremapreset";
+	}
 
-    @Override
-    public String MOD_VERSION() {
-        return "@MODVERSION@";
-    }
+	@Override
+	public String MOD_VERSION() {
+		return "@MODVERSION@";
+	}
 
-    @Override
-    public String MOD_DEPENDENCUIES() {
-        return "required-after:reborncore";
-    }
+	@Override
+	public String MOD_DEPENDENCIES() {
+		return "required-after:reborncore";
+	}
 }

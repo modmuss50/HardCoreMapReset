@@ -1,12 +1,15 @@
+/run
+/HardCoreMapReset.ipr
+/HardCoreMapReset.iml
 /bin
 /.idea
 /.gradle
 /.luaMods
-/bin
 /admin
 /build
 /libs
 /Models
+/out
 .project
 build.properties
 formatter.xml
