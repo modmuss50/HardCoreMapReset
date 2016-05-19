@@ -13,8 +13,8 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ISaveFormat;
-import net.minecraft.world.storage.SaveFormatComparator;
 import net.minecraft.world.storage.SaveFormatOld;
+import net.minecraft.world.storage.WorldSummary;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +38,7 @@ public class GuiMapList extends GuiScreen {
 	private static final int CANCEL_BUTTON_ID = 1;
 	public GuiScreen parent;
 	private TemplateSaveLoader saveLoader;
-	private List<SaveFormatComparator> saveList;
+	private List<WorldSummary> saveList;
 	private GuiButton createButton;
 	private GuiTextField nameField;
 	private MapList mapList;
@@ -140,7 +140,7 @@ public class GuiMapList extends GuiScreen {
 		ISaveFormat saveLoader = this.mc.getSaveLoader();
 		this.folderString = this.nameField.getText().trim();
 		this.folderString = this.folderString.replaceAll("[\\./\"]", "_");
-		char[] achar = ChatAllowedCharacters.allowedCharactersArray;
+		char[] achar = ChatAllowedCharacters.ILLEGAL_FILE_CHARACTERS;
 		int i = achar.length;
 
 		for (int j = 0; j < i; ++j) {
@@ -214,7 +214,7 @@ public class GuiMapList extends GuiScreen {
 
 		@Override
 		protected void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
-			SaveFormatComparator saveFormat = (SaveFormatComparator) GuiMapList.this.saveList.get(slot);
+			WorldSummary saveFormat = (WorldSummary) GuiMapList.this.saveList.get(slot);
 
 			String displayName = saveFormat.getDisplayName();
 			String author = saveLoader.authorList.get(saveFormat);
@@ -246,7 +246,7 @@ public class GuiMapList extends GuiScreen {
 		}
 	}
 
-	private SaveFormatComparator getSave() {
+	private WorldSummary getSave() {
 		return GuiMapList.this.saveList.get(this.selectedSlot);
 	}
 

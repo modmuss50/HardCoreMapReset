@@ -6,7 +6,7 @@ import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
-import net.minecraft.world.storage.SaveFormatComparator;
+import net.minecraft.world.storage.WorldSummary;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class TemplateSaveLoader extends AnvilSaveConverter {
 
-	public HashMap<SaveFormatComparator, String> authorList = new HashMap<SaveFormatComparator, String>();
+	public HashMap<WorldSummary, String> authorList = new HashMap<WorldSummary, String>();
 
 
 	public TemplateSaveLoader(File save_folder, DataFixer fixer) {
@@ -28,11 +28,11 @@ public class TemplateSaveLoader extends AnvilSaveConverter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SaveFormatComparator> getSaveList() throws AnvilConverterException {
+	public List<WorldSummary> getSaveList() throws AnvilConverterException {
 		authorList.clear();
 		List saves = super.getSaveList();
 		for (Object save_obj : saves) {
-			SaveFormatComparator save = (SaveFormatComparator) save_obj;
+			WorldSummary save = (WorldSummary) save_obj;
 			String author = "Unknown";
 			try {
 				File mapsFolder = new File(Minecraft.getMinecraft().mcDataDir, "maps");

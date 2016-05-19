@@ -13,7 +13,7 @@ import reborncore.common.IModInfo;
 import java.io.File;
 
 @Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "@MODVERSION@", acceptableRemoteVersions = "*", dependencies = "required-after:reborncore")
-public class MapReset implements IModInfo {
+public class MapReset {
 
 	@SidedProxy(clientSide = "modmuss50.HardCoreMapReset.proxy.ClientProxy", serverSide = "modmuss50.HardCoreMapReset.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -44,25 +44,5 @@ public class MapReset implements IModInfo {
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.init();
-	}
-
-	@Override
-	public String MOD_NAME() {
-		return "HardcoreMapReset";
-	}
-
-	@Override
-	public String MOD_ID() {
-		return "hardcoremapreset";
-	}
-
-	@Override
-	public String MOD_VERSION() {
-		return "@MODVERSION@";
-	}
-
-	@Override
-	public String MOD_DEPENDENCIES() {
-		return "required-after:reborncore";
 	}
 }

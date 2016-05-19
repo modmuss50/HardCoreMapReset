@@ -16,13 +16,13 @@ public class GuiTweaker {
 
 	@SubscribeEvent()
 	public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post evt) {
-		if (evt.gui instanceof GuiWorldSelection) {
+		if (evt.getGui() instanceof GuiWorldSelection) {
 			MapReset.INSTANCE.reLoadConfig();
-			List<GuiButton> buttonList = evt.buttonList;
+			List<GuiButton> buttonList = evt.getButtonList();
 			ArrayList<Integer> buttonIDList = new ArrayList<Integer>();
 
 			// Width - 40 - (2 x 4) for spaces
-			int width = (evt.gui.width - 48) / 3;
+			int width = (evt.getGui().width - 48) / 3;
 			int yPosition = 1;
 
 			boolean newWorldButton = MapReset.showCreateWorld;
@@ -33,7 +33,7 @@ public class GuiTweaker {
 				// 3 - create
 				if (button.id == 3) {
 					button.width = width;
-					button.xPosition = (evt.gui.width / 2) - (width / 2);
+					button.xPosition = (evt.getGui().width / 2) - (width / 2);
 					yPosition = button.yPosition;
 					if (!newWorldButton) {
 						button.visible = false;
@@ -42,9 +42,9 @@ public class GuiTweaker {
 				// 1 - select
 				else if (button.id == 1) {
 					button.width = width;
-					button.xPosition = (evt.gui.width / 2) - (width / 2) - 4 - width;
+					button.xPosition = (evt.getGui().width / 2) - (width / 2) - 4 - width;
 					if (!newWorldButton) {
-						button.xPosition = (evt.gui.width / 2) - 4 - width;
+						button.xPosition = (evt.getGui().width / 2) - 4 - width;
 					}
 				} else if (button.id == BUTTON_ID) {
 					used = true;
@@ -59,9 +59,9 @@ public class GuiTweaker {
 					}
 				}
 			}
-			int xPosition = (evt.gui.width / 2) + (width / 2) + 4;
+			int xPosition = (evt.getGui().width / 2) + (width / 2) + 4;
 			if (!newWorldButton) {
-				xPosition = (evt.gui.width / 2);
+				xPosition = (evt.getGui().width / 2);
 			}
 			GuiButton button = new GuiButton(BUTTON_ID, xPosition, yPosition, width, 20, I18n.format("gui.hardcoremapreset.create_button"));
 			buttonList.add(button);
@@ -70,9 +70,9 @@ public class GuiTweaker {
 
 	@SubscribeEvent
 	public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent evt) {
-		if (evt.gui instanceof GuiWorldSelection) {
-			if (evt.button.id == BUTTON_ID) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiMapList(evt.gui));
+		if (evt.getGui() instanceof GuiWorldSelection) {
+			if (evt.getButton().id == BUTTON_ID) {
+				Minecraft.getMinecraft().displayGuiScreen(new GuiMapList(evt.getGui()));
 			}
 		}
 	}

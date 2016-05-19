@@ -24,7 +24,7 @@ public class ToggleButton extends GuiButton {
 	public void drawButton(Minecraft minecraft, int x, int y) {
 		if (this.visible) {
 			FontRenderer fontrenderer = minecraft.fontRendererObj;
-			minecraft.getTextureManager().bindTexture(buttonTextures);
+			minecraft.getTextureManager().bindTexture(BUTTON_TEXTURES);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
 			boolean bool = this.hovered;
