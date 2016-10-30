@@ -15,6 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.SaveFormatOld;
 import net.minecraft.world.storage.WorldSummary;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,11 +84,9 @@ public class GuiMapList extends GuiScreen {
 			if (Minecraft.getMinecraft().getSaveLoader() instanceof SaveFormatOld) {
 				SaveFormatOld old = (SaveFormatOld) Minecraft.getMinecraft().getSaveLoader();
 				try {
-					Field field = SaveFormatOld.class.getDeclaredField("dataFixer");
+					Field field = ReflectionHelper.findField(SaveFormatOld.class, "dataFixer", "field_184131_U", "S");
 					field.setAccessible(true);
 					fixer = (DataFixer) field.get(old);
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
