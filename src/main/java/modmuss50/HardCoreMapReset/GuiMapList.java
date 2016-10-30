@@ -84,7 +84,7 @@ public class GuiMapList extends GuiScreen {
 			if (Minecraft.getMinecraft().getSaveLoader() instanceof SaveFormatOld) {
 				SaveFormatOld old = (SaveFormatOld) Minecraft.getMinecraft().getSaveLoader();
 				try {
-					Field field = ReflectionHelper.findField(SaveFormatOld.class, "dataFixer", "field_184131_U", "S");
+					Field field = ReflectionHelper.findField(SaveFormatOld.class, "dataFixer", "field_186354_b", "b");
 					field.setAccessible(true);
 					fixer = (DataFixer) field.get(old);
 				} catch (IllegalAccessException e) {
