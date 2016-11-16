@@ -8,7 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="TechReborn" />
     <orderEntry type="module" module-name="RebornCore" />
   </component>
 </module>
