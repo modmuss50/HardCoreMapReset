@@ -2,12 +2,7 @@ package modmuss50.HardCoreMapReset;
 
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiErrorScreen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiWorldSelection;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.datafix.DataFixer;
@@ -46,7 +41,8 @@ public class GuiMapList extends GuiScreen {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat();
 	private int selectedSlot;
 	private String folderString;
-	private static final String[] portNames = new String[]{"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+	private static final String[] portNames = new String[] { "CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2",
+		"LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
 
 	public GuiMapList(GuiScreen parent) {
 		this.parent = parent;
@@ -77,7 +73,6 @@ public class GuiMapList extends GuiScreen {
 		this.createButton.enabled = false;
 	}
 
-
 	private void initSaveList() throws AnvilConverterException {
 		if (saveLoader == null) {
 			DataFixer fixer = null;
@@ -105,10 +100,9 @@ public class GuiMapList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(parent);
 		} else if (guiButton.id == CREATE_BUTTON_ID) {
 			createMap();
+			Minecraft.getMinecraft().displayGuiScreen(parent);
 
-			//if (Minecraft.getMinecraft().getSaveLoader().canLoadWorld(getSave().getFileName())) {
-				net.minecraftforge.fml.client.FMLClientHandler.instance().tryLoadExistingWorld(new GuiWorldSelection(this), getSave());
-		//	}
+			//	}
 		}
 		mapList.actionPerformed(guiButton);
 	}
@@ -232,16 +226,16 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 34, y + 12, 8421504);
 			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 34, y + 12 + 10, 8421504);
 
-//            GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
-//            Tessellator tessellator = Tessellator.getInstance();
-//            VertexBuffer worldrenderer = tessellator.getBuffer();
-//            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-//            //worldrenderer.setColorOpaque(255, 255, 255);
-//            worldrenderer.pos(x, y + 32, zLevel);
-//            worldrenderer.pos(x + 32, y + 32, zLevel);
-//            worldrenderer.pos(x + 32, y, zLevel);
-//            worldrenderer.pos(x, y, zLevel);
-//            tessellator.draw();
+			//            GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
+			//            Tessellator tessellator = Tessellator.getInstance();
+			//            VertexBuffer worldrenderer = tessellator.getBuffer();
+			//            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+			//            //worldrenderer.setColorOpaque(255, 255, 255);
+			//            worldrenderer.pos(x, y + 32, zLevel);
+			//            worldrenderer.pos(x + 32, y + 32, zLevel);
+			//            worldrenderer.pos(x + 32, y, zLevel);
+			//            worldrenderer.pos(x, y, zLevel);
+			//            tessellator.draw();
 		}
 	}
 
