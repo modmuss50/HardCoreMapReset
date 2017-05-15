@@ -1,34 +1,18 @@
 package modmuss50.HardCoreMapRest;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.AnvilConverterException;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.storage.ISaveFormat;
-import net.minecraft.world.storage.SaveFormatComparator;
-import org.apache.commons.lang3.text.WordUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.src.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class GuiMapList extends GuiScreen {
-	private static final Logger logger = LogManager.getLogger();
 	private static final int CREATE_BUTTON_ID = 0;
 	private static final int CANCEL_BUTTON_ID = 1;
 	public GuiScreen parent;
@@ -49,52 +33,23 @@ public class GuiMapList extends GuiScreen {
 	@Override
 	public void initGui() {
 		super.initGui();
-
-		try
-		{
-			initSaveList();
-		}
-		catch (AnvilConverterException anvilconverterexception)
-		{
-			logger.error("Couldn't load level list", anvilconverterexception);
-			this.mc.displayGuiScreen(new GuiErrorScreen("Unable to load worlds", anvilconverterexception.getMessage()));
-			return;
-		}
-
-		loadSaveThumbnails();
-
-		this.nameField = new GuiTextField(this.fontRendererObj, this.width / 2 - 100, 45, 200, 20);
+		initSaveList();
+		StringTranslate translate = StringTranslate.getInstance();
+		this.nameField = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 45, 200, 20);
 		this.nameField.setFocused(true);
-		this.nameField.setText(I18n.format("selectWorld.newWorld"));
+		this.nameField.setText(translate.translateKey("selectWorld.newWorld"));
 		sanitizeFolderName();
 
 		this.mapList = new MapList();
 
-		this.buttonList.add(this.createButton = new GuiButton(CREATE_BUTTON_ID, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("selectWorld.create")));
-		this.buttonList.add(new GuiButton(CANCEL_BUTTON_ID, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
+		this.controlList.add(this.createButton = new GuiButton(CREATE_BUTTON_ID, this.width / 2 - 155, this.height - 28, 150, 20, translate.translateKey("selectWorld.create")));
+		this.controlList.add(new GuiButton(CANCEL_BUTTON_ID, this.width / 2 + 5, this.height - 28, 150, 20, translate.translateKey("gui.cancel")));
 		this.createButton.enabled = false;
 	}
 
-	private void loadSaveThumbnails() {
-		for (Object save_obj : saveList)
-		{
-			TemplateSaveFormat save = (TemplateSaveFormat)save_obj;
-			if(save.getThumbnail() != null){
-				save.setTexture(loadTexture(save.getThumbnail()));
-			} else {
-				try {
-					Random rand = new Random();
-					int randomNum = rand.nextInt((4 - 0) + 1) + 0;
-					save.setTexture(loadTexture(ImageIO.read(GuiMapList.class.getResourceAsStream("/assets/minecraft/textures/gui/title/background/panorama_" + randomNum + ".png"))));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
-	private void initSaveList() throws AnvilConverterException {
-		this.saveList = MapReset.saveLoader.getSaveList();
+	private void initSaveList() {
+		this.saveList = ResetMaps.saveLoader.getSaveList();
 		Collections.sort(this.saveList);
 		this.selectedSlot = -1;
 	}
@@ -103,12 +58,13 @@ public class GuiMapList extends GuiScreen {
 	public void actionPerformed(GuiButton guiButton) {
 		if (guiButton.id == CANCEL_BUTTON_ID)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(parent);
+			ModLoader.getMinecraftInstance().displayGuiScreen(parent);
 		}
 		else if (guiButton.id == CREATE_BUTTON_ID)
 		{
 			createMap();
-            FMLClientHandler.instance().tryLoadExistingWorld(new GuiSelectWorld(this), this.folderString, this.nameField.getText().trim());
+			ModLoader.getMinecraftInstance().displayGuiScreen(new GuiSelectWorld(new GuiMainMenu()));
+            //FMLClientHandler.instance().tryLoadExistingWorld(new GuiSelectWorld(this), this.folderString, this.nameField.getText().trim());
 		}
 		else
 		{
@@ -121,10 +77,10 @@ public class GuiMapList extends GuiScreen {
 	{
 		if (keyCode == 28 || keyCode == 156)
 		{
-			this.actionPerformed((GuiButton)this.buttonList.get(0));
+			this.actionPerformed((GuiButton)this.controlList.get(0));
 		}
 
-		if (this.nameField.isFocused())
+		if (this.nameField.getIsFocused())
 		{
 			this.nameField.textboxKeyTyped(keyChar, keyCode);
 		}
@@ -138,7 +94,7 @@ public class GuiMapList extends GuiScreen {
 		ISaveFormat saveLoader = this.mc.getSaveLoader();
 		this.folderString = this.nameField.getText().trim();
 		this.folderString = this.folderString.replaceAll("[\\./\"]", "_");
-		char[] achar = ChatAllowedCharacters.allowedCharacters;
+		char[] achar = ChatAllowedCharacters.allowedCharactersArray;
 		int i = achar.length;
 
 		for (int j = 0; j < i; ++j)
@@ -169,9 +125,10 @@ public class GuiMapList extends GuiScreen {
 	public void drawScreen(int x, int y, float f) {
 		mapList.drawScreen(x, y, f);
 		nameField.drawTextBox();
-		this.drawCenteredString(this.fontRendererObj, I18n.format("gui.hardcoremapreset.create_title"), this.width / 2, 20, -1);
-		this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterName"), this.width / 2 - 100, 35, -6250336);
-		this.drawString(this.fontRendererObj, I18n.format("selectWorld.resultFolder") + " " + this.folderString, this.width / 2 - 100, 68, -6250336);
+		StringTranslate translate = StringTranslate.getInstance();
+		this.drawCenteredString(this.fontRenderer, translate.translateKey("gui.hardcoremapreset.create_title"), this.width / 2, 20, -1);
+		this.drawString(this.fontRenderer, translate.translateKey("selectWorld.enterName"), this.width / 2 - 100, 35, -6250336);
+		this.drawString(this.fontRenderer, translate.translateKey("selectWorld.resultFolder") + " " + this.folderString, this.width / 2 - 100, 68, -6250336);
 		super.drawScreen(x, y, f);
 	}
 
@@ -186,7 +143,7 @@ public class GuiMapList extends GuiScreen {
 		}
 
 		@Override
-		protected void elementClicked(int slot, boolean doubleClicked, int mouseX, int mouseY) {
+		protected void elementClicked(int slot, boolean doubleClicked) {
 			GuiMapList.this.selectedSlot = slot;
 			GuiMapList.this.createButton.enabled = true;
 
@@ -206,52 +163,45 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.drawDefaultBackground();
 		}
 
-		@Override
-		public int getListWidth() {
-			return GuiMapList.this.width - 40;
-		}
+//		@Override
+//		public int getListWidth() {
+//			return GuiMapList.this.width - 40;
+//		}
+//
+//		@Override
+//		protected int getScrollBarX() {
+//			return (this.width / 2) + (this.getListWidth() / 2) - 6;
+//		}
 
 		@Override
-		protected int getScrollBarX() {
-			return (this.width / 2) + (this.getListWidth() / 2) - 6;
-		}
-
-		@Override
-		protected void drawSlot(int slot, int x, int y, int slotHeight, Tessellator tessellator, int mouseX, int mouseY) {
+		protected void drawSlot(int slot, int x, int y, int slotHeight, Tessellator tessellator) {
 			TemplateSaveFormat saveFormat = (TemplateSaveFormat)GuiMapList.this.saveList.get(slot);
-
+			StringTranslate translate = StringTranslate.getInstance();
 			String displayName = saveFormat.getDisplayName();
 			String author = saveFormat.getAuthor();
-			String by = I18n.format("gui.hardcoremapreset.by");
-			String topLine = displayName + ", " + EnumChatFormatting.ITALIC + EnumChatFormatting.BOLD + by + EnumChatFormatting.RESET + ": " + author;
+			String by = translate.translateKey("gui.hardcoremapreset.by");
+			String topLine = displayName + ", " + by + ": " + author;
 
 			String folder = saveFormat.getFileName();
 			String date = GuiMapList.this.dateFormat.format(new Date(saveFormat.getLastTimePlayed()));
 			String middleLine = folder + " (" + date + ")";
 
-			String mode = WordUtils.capitalize(saveFormat.getEnumGameType().getName());
-			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
+			String mode = "";
+			String cheats = "";
 			String bottomLine = mode + ", " + cheats;
 
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine,    x + 34, y + 1,       16777215);
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 34, y + 12,      8421504);
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 34, y + 12 + 10, 8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine,    x + 34, y + 1,       16777215);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 12,      8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, bottomLine, x + 34, y + 12 + 10, 8421504);
 
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
-			tessellator.startDrawingQuads();
-			tessellator.setColorOpaque(255, 255, 255);
-			tessellator.addVertexWithUV(x, y + 32, zLevel, 0, 1);
-			tessellator.addVertexWithUV(x + 32, y + 32, zLevel, 1, 1);
-			tessellator.addVertexWithUV(x + 32, y, zLevel, 1, 0);
-			tessellator.addVertexWithUV(x, y, zLevel, 0, 0);
-			tessellator.draw();
+
 		}
 	}
 
 	private void createMap() {
 		SaveFormatComparator saveformatcomparator = (SaveFormatComparator)GuiMapList.this.saveList.get(this.selectedSlot);
 		ResetMaps.copymap(saveformatcomparator.getFileName(), this.folderString);
-		Minecraft.getMinecraft().getSaveLoader().renameWorld(this.folderString, this.nameField.getText().trim());
+		ModLoader.getMinecraftInstance().getSaveLoader().renameWorld(this.folderString, this.nameField.getText().trim());
 	}
 
 	public static int loadTexture(BufferedImage image) {
@@ -286,12 +236,4 @@ public class GuiMapList extends GuiScreen {
 		return textureID;
 	}
 
-	@Override
-	public void onGuiClosed() {
-		for (Object save_obj : saveList) {
-			TemplateSaveFormat save = (TemplateSaveFormat)save_obj;
-			int textureID = save.getTexture();
-			GL11.glDeleteTextures(textureID);
-		}
-	}
 }

@@ -2,6 +2,7 @@ package modmuss50.HardCoreMapRest;
 
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.ModLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class ResetMaps {
+	public static TemplateSaveLoader saveLoader;
+
 	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
 			if (!targetLocation.exists()) {
@@ -53,7 +56,7 @@ public class ResetMaps {
 	}
 
 	public static void resetmap(String name) {
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = ModLoader.getMinecraftInstance();
 		File saveDir = new File(mc.mcDataDir, "saves");
 		File backupDir = new File(mc.mcDataDir, "maps");
 		File oldDir = new File(saveDir, name);
@@ -70,7 +73,7 @@ public class ResetMaps {
 
 	public static void copymap(String from, String to)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = ModLoader.getMinecraftInstance();
 		File saveDir = new File(mc.mcDataDir, "saves");
 		File backupDir = new File(mc.mcDataDir, "maps");
 		File oldDir = new File(saveDir, to);
