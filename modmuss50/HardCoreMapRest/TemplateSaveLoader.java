@@ -1,7 +1,5 @@
 package modmuss50.HardCoreMapRest;
 
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import net.minecraft.src.AnvilSaveConverter;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.SaveFormatComparator;
@@ -43,28 +41,28 @@ public class TemplateSaveLoader extends AnvilSaveConverter
 					writer.write("}");
 					writer.close();
 				}
-                JsonReader reader = new JsonReader(new FileReader(authorFile));
-
-                String key = "";
-                while (reader.hasNext()) {
-                    JsonToken type = reader.peek();
-                    if (type == JsonToken.BEGIN_OBJECT) {
-                        reader.beginObject();
-                    }
-                    else if (type == JsonToken.END_OBJECT) {
-                        reader.endObject();
-                    }
-                    else if (type == JsonToken.NAME) {
-                        key = reader.nextName();
-                    }
-                    else if (type == JsonToken.STRING) {
-                        if (key.compareTo("author") == 0) {
-                            author = reader.nextString();
-                        }
-                    }
-                }
-
-                reader.close();
+//                JsonReader reader = new JsonReader(new FileReader(authorFile));
+//
+//                String key = "";
+//                while (reader.hasNext()) {
+//                    JsonToken type = reader.peek();
+//                    if (type == JsonToken.BEGIN_OBJECT) {
+//                        reader.beginObject();
+//                    }
+//                    else if (type == JsonToken.END_OBJECT) {
+//                        reader.endObject();
+//                    }
+//                    else if (type == JsonToken.NAME) {
+//                        key = reader.nextName();
+//                    }
+//                    else if (type == JsonToken.STRING) {
+//                        if (key.compareTo("author") == 0) {
+//                            author = reader.nextString();
+//                        }
+//                    }
+//                }
+//
+//                reader.close();
             }
             catch (FileNotFoundException e)
             {
