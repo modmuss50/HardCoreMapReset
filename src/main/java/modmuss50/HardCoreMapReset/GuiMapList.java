@@ -1,5 +1,6 @@
 package modmuss50.HardCoreMapReset;
 
+import me.modmuss50.crossLink.client.LinkSlot;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -172,7 +173,7 @@ public class GuiMapList extends GuiScreen {
 		super.drawScreen(x, y, f);
 	}
 
-	private class MapList extends GuiSlot {
+	private class MapList extends LinkSlot {
 		public MapList() {
 			super(GuiMapList.this.mc, GuiMapList.this.width, GuiMapList.this.height, 78, GuiMapList.this.height - 32, 36);
 		}
@@ -212,7 +213,7 @@ public class GuiMapList extends GuiScreen {
 		}
 
 		@Override
-		protected void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
+		public void drawSlot_link(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
 			WorldSummary saveFormat = (WorldSummary) GuiMapList.this.saveList.get(slot);
 
 			String displayName = saveFormat.getDisplayName();

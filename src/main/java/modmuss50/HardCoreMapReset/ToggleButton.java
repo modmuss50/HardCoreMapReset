@@ -1,5 +1,6 @@
 package modmuss50.HardCoreMapReset;
 
+import me.modmuss50.crossLink.client.LinkButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -8,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class ToggleButton extends GuiButton {
+public class ToggleButton extends LinkButton {
 
 	public boolean isOn = false;
 
@@ -21,7 +22,7 @@ public class ToggleButton extends GuiButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft minecraft, int x, int y) {
+	public void drawButton_link(Minecraft minecraft, int x, int y) {
 		if (this.visible) {
 			FontRenderer fontrenderer = minecraft.fontRendererObj;
 			minecraft.getTextureManager().bindTexture(BUTTON_TEXTURES);
