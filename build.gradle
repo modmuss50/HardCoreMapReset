@@ -44,5 +44,7 @@ group = 'modmuss50.HardCoreMapReset'
 archivesBaseName = "HardCoreMapReset"
 
 dependencies {
-    compile 'RebornCore:RebornCore-1.11:+:dev'
+	compile('RebornCore:RebornCore-1.12:+:dev') {
+		transitive = false
+	}
 }
