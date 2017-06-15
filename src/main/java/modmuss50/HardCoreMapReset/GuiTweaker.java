@@ -33,8 +33,8 @@ public class GuiTweaker {
 				// 3 - create
 				if (button.id == 3) {
 					button.width = width;
-					button.xPosition = (evt.getGui().width / 2) - (width / 2);
-					yPosition = button.yPosition;
+					button.x = (evt.getGui().width / 2) - (width / 2);
+					yPosition = button.y;
 					if (!newWorldButton) {
 						button.visible = false;
 					}
@@ -42,9 +42,9 @@ public class GuiTweaker {
 				// 1 - select
 				else if (button.id == 1) {
 					button.width = width;
-					button.xPosition = (evt.getGui().width / 2) - (width / 2) - 4 - width;
+					button.x = (evt.getGui().width / 2) - (width / 2) - 4 - width;
 					if (!newWorldButton) {
-						button.xPosition = (evt.getGui().width / 2) - 4 - width;
+						button.x = (evt.getGui().width / 2) - 4 - width;
 					}
 				} else if (button.id == BUTTON_ID) {
 					used = true;

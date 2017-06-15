@@ -42,10 +42,10 @@ public class GuiConformation extends GuiScreen {
 	@Override
 	public void drawScreen(int x, int y, float f) {
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRendererObj, "Are you sure you want to reset " + maps.size() + " map(s)?", this.width / 2, 40, 0xFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "You will loose all of your progress and worlds.", this.width / 2, 70, 0xFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "Your save(s) will be reset back to default(s).", this.width / 2, 80, 0xFFFFFF);
-		this.drawCenteredString(this.fontRendererObj, "THIS CANNOT BE UNDONE! ", this.width / 2, this.height - 50, 0xff0000);
+		this.drawCenteredString(this.fontRenderer, "Are you sure you want to reset " + maps.size() + " map(s)?", this.width / 2, 40, 0xFFFFFF);
+		this.drawCenteredString(this.fontRenderer, "You will loose all of your progress and worlds.", this.width / 2, 70, 0xFFFFFF);
+		this.drawCenteredString(this.fontRenderer, "Your save(s) will be reset back to default(s).", this.width / 2, 80, 0xFFFFFF);
+		this.drawCenteredString(this.fontRenderer, "THIS CANNOT BE UNDONE! ", this.width / 2, this.height - 50, 0xff0000);
 		super.drawScreen(x, y, f);
 	}
 

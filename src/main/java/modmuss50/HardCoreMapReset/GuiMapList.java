@@ -1,14 +1,8 @@
 package modmuss50.HardCoreMapReset;
 
-import me.modmuss50.crossLink.client.LinkSlot;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiErrorScreen;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSlot;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiWorldSelection;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.datafix.DataFixer;
@@ -66,7 +60,7 @@ public class GuiMapList extends GuiScreen {
 			return;
 		}
 
-		this.nameField = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 100, 45, 200, 20);
+		this.nameField = new GuiTextField(0, this.fontRenderer, this.width / 2 - 100, 45, 200, 20);
 		this.nameField.setFocused(true);
 		this.nameField.setText(I18n.format("selectWorld.newWorld"));
 		sanitizeFolderName();
@@ -167,13 +161,13 @@ public class GuiMapList extends GuiScreen {
 	public void drawScreen(int x, int y, float f) {
 		mapList.drawScreen(x, y, f);
 		nameField.drawTextBox();
-		this.drawCenteredString(this.fontRendererObj, I18n.format("gui.hardcoremapreset.create_title"), this.width / 2, 20, -1);
-		this.drawString(this.fontRendererObj, I18n.format("selectWorld.enterName"), this.width / 2 - 100, 35, -6250336);
-		this.drawString(this.fontRendererObj, I18n.format("selectWorld.resultFolder") + " " + this.folderString, this.width / 2 - 100, 68, -6250336);
+		this.drawCenteredString(this.fontRenderer, I18n.format("gui.hardcoremapreset.create_title"), this.width / 2, 20, -1);
+		this.drawString(this.fontRenderer, I18n.format("selectWorld.enterName"), this.width / 2 - 100, 35, -6250336);
+		this.drawString(this.fontRenderer, I18n.format("selectWorld.resultFolder") + " " + this.folderString, this.width / 2 - 100, 68, -6250336);
 		super.drawScreen(x, y, f);
 	}
 
-	private class MapList extends LinkSlot {
+	private class MapList extends GuiSlot {
 		public MapList() {
 			super(GuiMapList.this.mc, GuiMapList.this.width, GuiMapList.this.height, 78, GuiMapList.this.height - 32, 36);
 		}
@@ -213,7 +207,7 @@ public class GuiMapList extends GuiScreen {
 		}
 
 		@Override
-		public void drawSlot_link(int slot, int x, int y, int slotHeight, int mouseX, int mouseY) {
+		public void func_192637_a(int slot, int x, int y, int slotHeight, int mouseX, int mouseY, float f) {
 			WorldSummary saveFormat = (WorldSummary) GuiMapList.this.saveList.get(slot);
 
 			String displayName = saveFormat.getDisplayName();
@@ -229,9 +223,9 @@ public class GuiMapList extends GuiScreen {
 			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
 			String bottomLine = mode + ", " + cheats;
 
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, topLine, x + 34, y + 1, 16777215);
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, middleLine, x + 34, y + 12, 8421504);
-			GuiMapList.this.drawString(GuiMapList.this.fontRendererObj, bottomLine, x + 34, y + 12 + 10, 8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 1, 16777215);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 12, 8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, bottomLine, x + 34, y + 12 + 10, 8421504);
 
 //            GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
 //            Tessellator tessellator = Tessellator.getInstance();

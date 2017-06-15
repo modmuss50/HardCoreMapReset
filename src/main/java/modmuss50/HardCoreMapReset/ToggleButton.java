@@ -1,6 +1,5 @@
 package modmuss50.HardCoreMapReset;
 
-import me.modmuss50.crossLink.client.LinkButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -9,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class ToggleButton extends LinkButton {
+public class ToggleButton extends GuiButton {
 
 	public boolean isOn = false;
 
@@ -22,12 +21,12 @@ public class ToggleButton extends LinkButton {
 	}
 
 	@Override
-	public void drawButton_link(Minecraft minecraft, int x, int y) {
+	public void drawButton(Minecraft minecraft, int x, int y, float f) {
 		if (this.visible) {
-			FontRenderer fontrenderer = minecraft.fontRendererObj;
+			FontRenderer fontrenderer = minecraft.fontRenderer;
 			minecraft.getTextureManager().bindTexture(BUTTON_TEXTURES);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.hovered = x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height;
+			this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
 			boolean bool = this.hovered;
 			if (isOn) {
 				bool = true;
@@ -36,8 +35,8 @@ public class ToggleButton extends LinkButton {
 			GL11.glEnable(GL11.GL_BLEND);
 			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + k * 20, this.width / 2, this.height);
-			this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + k * 20, this.width / 2, this.height);
+			this.drawTexturedModalRect(this.x, this.y, 0, 46 + k * 20, this.width / 2, this.height);
+			this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + k * 20, this.width / 2, this.height);
 			this.mouseDragged(minecraft, x, y);
 			int l = 14737632;
 
@@ -51,10 +50,10 @@ public class ToggleButton extends LinkButton {
 				l = 16777120;
 			}
 
-			this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, l);
+			this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, l);
 
 			if (isOn) {
-				this.drawCenteredString(fontrenderer, "X", this.xPosition + this.width / 2 - (this.width / 2) - 10, this.yPosition + (this.height - 8) / 2, Color.red.getRGB());
+				this.drawCenteredString(fontrenderer, "X", this.x + this.width / 2 - (this.width / 2) - 10, this.y + (this.height - 8) / 2, Color.red.getRGB());
 			}
 		}
 	}
@@ -66,7 +65,7 @@ public class ToggleButton extends LinkButton {
 	 * e).
 	 */
 	public boolean mousePressed(Minecraft minecraft, int x, int y) {
-		if (this.enabled && this.visible && x >= this.xPosition && y >= this.yPosition && x < this.xPosition + this.width && y < this.yPosition + this.height) {
+		if (this.enabled && this.visible && x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height) {
 			this.isOn = !this.isOn;
 			return true;
 		}

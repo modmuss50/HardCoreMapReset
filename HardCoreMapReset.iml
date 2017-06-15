@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="RebornCore" />
+    <orderEntry type="module" module-name="TechReborn-1.12" />
   </component>
 </module>
