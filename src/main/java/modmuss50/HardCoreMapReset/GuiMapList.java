@@ -207,7 +207,7 @@ public class GuiMapList extends GuiScreen {
 		}
 
 		@Override
-		public void func_192637_a(int slot, int x, int y, int slotHeight, int mouseX, int mouseY, float f) {
+		public void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY, float f) {
 			WorldSummary saveFormat = (WorldSummary) GuiMapList.this.saveList.get(slot);
 
 			String displayName = saveFormat.getDisplayName();
