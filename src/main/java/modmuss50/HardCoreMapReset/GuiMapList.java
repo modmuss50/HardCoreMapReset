@@ -3,8 +3,10 @@ package modmuss50.HardCoreMapReset;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ISaveFormat;
@@ -14,15 +16,10 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -227,16 +224,14 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 12, 8421504);
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, bottomLine, x + 34, y + 12 + 10, 8421504);
 
-//            GL11.glBindTexture(GL11.GL_TEXTURE_2D, saveFormat.getTexture());
-//            Tessellator tessellator = Tessellator.getInstance();
-//            VertexBuffer worldrenderer = tessellator.getBuffer();
-//            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-//            //worldrenderer.setColorOpaque(255, 255, 255);
-//            worldrenderer.pos(x, y + 32, zLevel);
-//            worldrenderer.pos(x + 32, y + 32, zLevel);
-//            worldrenderer.pos(x + 32, y, zLevel);
-//            worldrenderer.pos(x, y, zLevel);
-//            tessellator.draw();
+			if(saveLoader.imageList.containsKey(saveFormat)){
+				ResourceLocation texture = saveLoader.imageList.get(saveFormat);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.enableBlend();
+				Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+				GlStateManager.disableBlend();
+			}
 		}
 	}
 
@@ -250,38 +245,6 @@ public class GuiMapList extends GuiScreen {
 		}
 		ResetMaps.copymap(getSave().getFileName(), this.folderString);
 		Minecraft.getMinecraft().getSaveLoader().renameWorld(this.folderString, this.nameField.getText().trim());
-	}
-
-	public static int loadTexture(BufferedImage image) {
-		int[] pixels = new int[image.getWidth() * image.getHeight()];
-		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
-
-		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-
-		for (int y = 0; y < image.getHeight(); y++) {
-			for (int x = 0; x < image.getWidth(); x++) {
-				int pixel = pixels[y * image.getWidth() + x];
-				buffer.put((byte) ((pixel >> 16) & 0xFF));
-				buffer.put((byte) ((pixel >> 8) & 0xFF));
-				buffer.put((byte) (pixel & 0xFF));
-				buffer.put((byte) ((pixel >> 24) & 0xFF));
-			}
-		}
-
-		buffer.flip();
-
-		int textureID = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-
-		return textureID;
 	}
 
 }

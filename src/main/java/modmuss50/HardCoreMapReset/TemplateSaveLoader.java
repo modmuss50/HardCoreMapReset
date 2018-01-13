@@ -1,26 +1,31 @@
 package modmuss50.HardCoreMapReset;
 
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
+import com.google.common.base.Charsets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.storage.WorldSummary;
+import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedWriter;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
 public class TemplateSaveLoader extends AnvilSaveConverter {
 
-	public HashMap<WorldSummary, String> authorList = new HashMap<WorldSummary, String>();
+	public HashMap<WorldSummary, String> authorList = new HashMap<>();
 
+	public HashMap<WorldSummary, ResourceLocation> imageList = new HashMap<>();
+
+	public static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	public TemplateSaveLoader(File save_folder, DataFixer fixer) {
 		super(save_folder, fixer);
@@ -30,6 +35,8 @@ public class TemplateSaveLoader extends AnvilSaveConverter {
 	@Override
 	public List<WorldSummary> getSaveList() throws AnvilConverterException {
 		authorList.clear();
+		imageList.values().forEach(resourceLocation -> Minecraft.getMinecraft().getTextureManager().deleteTexture(resourceLocation));
+		imageList.clear();
 		List saves = super.getSaveList();
 		for (Object save_obj : saves) {
 			WorldSummary save = (WorldSummary) save_obj;
@@ -38,41 +45,37 @@ public class TemplateSaveLoader extends AnvilSaveConverter {
 				File mapsFolder = new File(Minecraft.getMinecraft().mcDataDir, "maps");
 				File mapFolder = new File(mapsFolder, save.getFileName());
 				File authorFile = new File(mapFolder, "info.json");
+				String iconName = "icon.png";
 				if (!authorFile.exists()) {
-					BufferedWriter writer = new BufferedWriter(new FileWriter(authorFile));
-					writer.write("{");
-					writer.newLine();
-					writer.write("  \"author\" : \"" + Minecraft.getMinecraft().getSession().getUsername() + "\",");
-					writer.write("}");
-					writer.close();
-				}
-				JsonReader reader = new JsonReader(new FileReader(authorFile));
-
-				String key = "";
-				while (reader.hasNext()) {
-					JsonToken type = reader.peek();
-					if (type == JsonToken.BEGIN_OBJECT) {
-						reader.beginObject();
-					} else if (type == JsonToken.END_OBJECT) {
-						reader.endObject();
-					} else if (type == JsonToken.NAME) {
-						key = reader.nextName();
-					} else if (type == JsonToken.STRING) {
-						if (key.compareTo("author") == 0) {
-							author = reader.nextString();
-						}
+					FileUtils.writeStringToFile(authorFile, GSON.toJson(new AuthorData()), Charsets.UTF_8);
+				} else {
+					AuthorData data = GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), AuthorData.class);
+					author = data.author;
+					if(data.thumbnail != null){
+						iconName = data.thumbnail;
 					}
 				}
-
-				reader.close();
-			} catch (FileNotFoundException e) {
-				// TODO print warning
+				File iconFile = new File(mapFolder, iconName);
+				if(iconFile.exists()){
+					BufferedImage bufferedImage = ImageIO.read(iconFile);
+					DynamicTexture texture = new DynamicTexture(bufferedImage.getWidth(), bufferedImage.getHeight());
+					bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), texture.getTextureData(), 0, bufferedImage.getWidth());
+					texture.updateDynamicTexture();
+					ResourceLocation resourceLocation = new ResourceLocation("hcmr", "icon/" + save.getFileName() + "/" + iconFile.getName());
+					Minecraft.getMinecraft().getTextureManager().loadTexture(resourceLocation, texture);
+					imageList.put(save, resourceLocation);
+				}
 			} catch (IOException e) {
-				// TODO print warning
+				e.printStackTrace();
 			}
 			authorList.put(save, author);
 		}
-
 		return saves;
+	}
+
+
+	private static class AuthorData {
+		String author;
+		String thumbnail;
 	}
 }
