@@ -33,11 +33,11 @@ public class GuiMapList extends GuiScreen {
 	private TemplateSaveLoader saveLoader;
 	private List<WorldSummary> saveList;
 	private GuiButton createButton;
-	private GuiTextField nameField;
+	public GuiTextField nameField;
 	private MapList mapList;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat();
 	private int selectedSlot;
-	private String folderString;
+	public String folderString;
 	private static final String[] portNames = new String[]{"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
 	public GuiMapList(GuiScreen parent) {
@@ -97,10 +97,6 @@ public class GuiMapList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(parent);
 		} else if (guiButton.id == CREATE_BUTTON_ID) {
 			createMap();
-
-			//if (Minecraft.getMinecraft().getSaveLoader().canLoadWorld(getSave().getFileName())) {
-				net.minecraftforge.fml.client.FMLClientHandler.instance().tryLoadExistingWorld(new GuiWorldSelection(this), getSave());
-		//	}
 		}
 		mapList.actionPerformed(guiButton);
 	}
@@ -243,8 +239,7 @@ public class GuiMapList extends GuiScreen {
 		if (this.selectedSlot == -1) {
 			return;
 		}
-		ResetMaps.copymap(getSave().getFileName(), this.folderString);
-		Minecraft.getMinecraft().getSaveLoader().renameWorld(this.folderString, this.nameField.getText().trim());
+		ResetMaps.copymap(getSave().getFileName(), this.folderString, this);
 	}
 
 }

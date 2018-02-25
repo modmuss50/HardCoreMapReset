@@ -1,43 +1,17 @@
 package modmuss50.HardCoreMapReset;
 
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiWorldSelection;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ResetMaps {
-	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
-		if (sourceLocation.isDirectory()) {
-			if (!targetLocation.exists()) {
-				targetLocation.mkdir();
-			}
-
-			String[] children = sourceLocation.list();
-			for (int i = 0; i < children.length; i++) {
-				copyDirectory(new File(sourceLocation, children[i]),
-						new File(targetLocation, children[i]));
-			}
-		} else {
-
-			InputStream in = new FileInputStream(sourceLocation);
-			OutputStream out = new FileOutputStream(targetLocation);
-
-			// Copy the bits from instream to outstream
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			in.close();
-			out.close();
-		}
-	}
-
 	public static void deleteFolder(File folder) {
 		File[] files = folder.listFiles();
 		if (files != null) { //some JVMs return null for empty dirs
@@ -52,38 +26,58 @@ public class ResetMaps {
 		folder.delete();
 	}
 
-	public static void resetmap(String name) {
+	public static void copymap(String from, String to, GuiMapList mapList) {
 		Minecraft mc = Minecraft.getMinecraft();
-		File saveDir = new File(mc.mcDataDir, "saves");
-		File backupDir = new File(mc.mcDataDir, "maps");
-		File oldDir = new File(saveDir, name);
-		File newDir = new File(backupDir, name);
-		if (oldDir.exists())
-			deleteFolder(oldDir);
-		oldDir.mkdir();
-		try {
-			copyDirectory(newDir, oldDir);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
-	public static void copymap(String from, String to) {
-		Minecraft mc = Minecraft.getMinecraft();
-		File saveDir = new File(mc.mcDataDir, "saves");
-		File backupDir = new File(mc.mcDataDir, "maps");
-		File oldDir = new File(saveDir, to);
-		File newDir = new File(backupDir, from);
-		if (oldDir.exists()) {
-			// TODO
-			System.err.println("TODO");
-			return;
-		}
-		oldDir.mkdir();
-		try {
-			copyDirectory(newDir, oldDir);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		GuiCopyProgress.progress.setStage("Evalutating files to copy");
+
+
+		Thread copyThread = new Thread(() -> {
+			File saveDir = new File(mc.mcDataDir, "saves");
+			File backupDir = new File(mc.mcDataDir, "maps");
+			File target = new File(saveDir, to);
+			File source = new File(backupDir, from);
+			if (target.exists()) {
+				// TODO
+				System.err.println("TODO");
+				return;
+			}
+			target.mkdir();
+			try {
+				GuiCopyProgress.progress.setStage("Finding files to copy");
+				GuiCopyProgress.progress.setStep(0);
+				GuiCopyProgress.progress.setSteps(0);
+
+				Set<Path> paths = Files.walk(source.toPath())
+					.parallel().collect(Collectors.toSet());
+				long files = paths.size();
+				GuiCopyProgress.progress.setSteps((int) files);
+
+				Path sourcePath = source.toPath();
+				Path targetPath = target.toPath();
+				paths.parallelStream()
+					.forEach(path -> {
+						try {
+							GuiCopyProgress.progress.setStage("Copying: " + path.getFileName().toString());
+							GuiCopyProgress.progress.next();
+							Path targetFilePath = targetPath.resolve(sourcePath.relativize(path));
+							if(targetFilePath.getParent().toFile().exists()){
+
+							}
+							Files.copy(path, targetFilePath);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
+			Minecraft.getMinecraft().addScheduledTask(() -> mc.displayGuiScreen(new GuiWorldSelection(new GuiMainMenu())));
+
+		});
+		mc.displayGuiScreen(new GuiCopyProgress(copyThread));
+
 	}
 }
