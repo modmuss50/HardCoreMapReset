@@ -3,12 +3,15 @@ package modmuss50.HardCoreMapReset;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiWorldSelection;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ResetMaps {
@@ -57,15 +60,14 @@ public class ResetMaps {
 				Path sourcePath = source.toPath();
 				Path targetPath = target.toPath();
 				paths.parallelStream()
-					.forEach(path -> {
+					.map(Path::toFile)
+					.filter(file -> !file.isDirectory())
+					.forEach(file -> {
 						try {
-							GuiCopyProgress.progress.setStage("Copying: " + path.getFileName().toString());
+							GuiCopyProgress.progress.setStage("Copying: " + file.getName());
 							GuiCopyProgress.progress.next();
-							Path targetFilePath = targetPath.resolve(sourcePath.relativize(path));
-							if(targetFilePath.getParent().toFile().exists()){
-
-							}
-							Files.copy(path, targetFilePath);
+							Path targetFilePath = targetPath.resolve(sourcePath.relativize(file.toPath()));
+							FileUtils.copyFile(file, targetFilePath.toFile());
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
