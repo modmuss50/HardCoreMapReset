@@ -29,18 +29,13 @@ public class ResetMaps {
 		folder.delete();
 	}
 
-	public static void copymap(String from, String to, GuiMapList mapList) {
+	public static void copyDirWorld(WorldInfo worldInfo, String to, GuiMapList mapList) {
 		Minecraft mc = Minecraft.getMinecraft();
-
-
 		GuiCopyProgress.progress.setStage("Evalutating files to copy");
-
-
 		Thread copyThread = new Thread(() -> {
 			File saveDir = new File(mc.mcDataDir, "saves");
-			File backupDir = new File(mc.mcDataDir, "maps");
 			File target = new File(saveDir, to);
-			File source = new File(backupDir, from);
+			File source = worldInfo.getSaveFile();
 			if (target.exists()) {
 				// TODO
 				System.err.println("TODO");

@@ -31,7 +31,7 @@ public class GuiMapList extends GuiScreen {
 	private static final int CANCEL_BUTTON_ID = 1;
 	public GuiScreen parent;
 	private TemplateSaveLoader saveLoader;
-	private List<WorldSummary> saveList;
+	private List<WorldInfo> saveList;
 	private GuiButton createButton;
 	public GuiTextField nameField;
 	private MapList mapList;
@@ -49,14 +49,7 @@ public class GuiMapList extends GuiScreen {
 	public void initGui() {
 		super.initGui();
 
-		try {
-			initSaveList();
-		} catch (AnvilConverterException anvilconverterexception) {
-			logger.error("Couldn't load level list", anvilconverterexception);
-			this.mc.displayGuiScreen(new GuiErrorScreen("Unable to load worlds", anvilconverterexception.getMessage()));
-			return;
-		}
-
+		initSaveList();
 		this.nameField = new GuiTextField(0, this.fontRenderer, this.width / 2 - 100, 45, 200, 20);
 		this.nameField.setFocused(true);
 		this.nameField.setText(I18n.format("selectWorld.newWorld"));
@@ -70,23 +63,11 @@ public class GuiMapList extends GuiScreen {
 	}
 
 
-	private void initSaveList() throws AnvilConverterException {
+	private void initSaveList() {
 		if (saveLoader == null) {
-			DataFixer fixer = null;
-			if (Minecraft.getMinecraft().getSaveLoader() instanceof SaveFormatOld) {
-				SaveFormatOld old = (SaveFormatOld) Minecraft.getMinecraft().getSaveLoader();
-				try {
-					Field field = ReflectionHelper.findField(SaveFormatOld.class, "dataFixer", "field_186354_b", "b");
-					field.setAccessible(true);
-					fixer = (DataFixer) field.get(old);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-			saveLoader = new TemplateSaveLoader(new File(Minecraft.getMinecraft().mcDataDir, "maps"), fixer);
+			saveLoader = new TemplateSaveLoader(new File(Minecraft.getMinecraft().mcDataDir, "maps"));
 		}
 		this.saveList = saveLoader.getSaveList();
-		Collections.sort(this.saveList);
 		this.selectedSlot = -1;
 	}
 
@@ -201,20 +182,19 @@ public class GuiMapList extends GuiScreen {
 
 		@Override
 		public void drawSlot(int slot, int x, int y, int slotHeight, int mouseX, int mouseY, float f) {
-			WorldSummary saveFormat = (WorldSummary) GuiMapList.this.saveList.get(slot);
+			WorldInfo saveFormat = GuiMapList.this.saveList.get(slot);
 
-			String displayName = saveFormat.getDisplayName();
-			String author = saveLoader.authorList.get(saveFormat);
+			String displayName = saveFormat.getName();
+			String author = saveFormat.getAuthorData().author;
 			String by = I18n.format("gui.hardcoremapreset.by");
 			String topLine = displayName + ", " + TextFormatting.ITALIC + TextFormatting.BOLD + by + TextFormatting.RESET + ": " + author;
 
-			String folder = saveFormat.getFileName();
-			String date = GuiMapList.this.dateFormat.format(new Date(saveFormat.getLastTimePlayed()));
-			String middleLine = folder + " (" + date + ")";
+			String folder = saveFormat.getSaveFile().getName();
+			String middleLine = folder;
 
-			String mode = WordUtils.capitalize(saveFormat.getEnumGameType().getName());
-			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
-			String bottomLine = mode + ", " + cheats;
+//			String mode = WordUtils.capitalize(saveFormat.getEnumGameType().getName());
+//			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
+			String bottomLine = saveFormat.getAuthorData().description;
 
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 1, 16777215);
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 12, 8421504);
@@ -231,7 +211,7 @@ public class GuiMapList extends GuiScreen {
 		}
 	}
 
-	private WorldSummary getSave() {
+	private WorldInfo getSave() {
 		return GuiMapList.this.saveList.get(this.selectedSlot);
 	}
 
@@ -239,7 +219,7 @@ public class GuiMapList extends GuiScreen {
 		if (this.selectedSlot == -1) {
 			return;
 		}
-		ResetMaps.copymap(getSave().getFileName(), this.folderString, this);
+		getSave().copy(this);
 	}
 
 }
