@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiWorldSelection;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
