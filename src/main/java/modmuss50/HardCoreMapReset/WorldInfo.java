@@ -1,5 +1,7 @@
 package modmuss50.HardCoreMapReset;
 
+import reborncore.RebornCore;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,10 @@ public abstract class WorldInfo {
 				e.printStackTrace();
 			}
 		}
+		if(inputFile.getName().endsWith(".zip")){
+			return WorldZip.loadZip(inputFile);
+		}
+		RebornCore.logHelper.error(inputFile.getName() + " is not supported!");
 		return null;
 	}
 

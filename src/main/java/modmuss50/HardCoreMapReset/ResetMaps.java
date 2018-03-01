@@ -5,14 +5,14 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiWorldSelection;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class ResetMaps {
 	public static void deleteFolder(File folder) {
@@ -67,6 +67,76 @@ public class ResetMaps {
 							e.printStackTrace();
 						}
 					});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
+			Minecraft.getMinecraft().addScheduledTask(() -> mc.displayGuiScreen(new GuiWorldSelection(new GuiMainMenu())));
+
+		});
+		mc.displayGuiScreen(new GuiCopyProgress(copyThread));
+
+	}
+
+	public static void copyZipWorld(WorldInfo info, String to, GuiMapList mapList) {
+		if (!(info instanceof WorldZip)) {
+			throw new UnsupportedOperationException();
+		}
+		WorldZip worldInfo = (WorldZip) info;
+		Minecraft mc = Minecraft.getMinecraft();
+		GuiCopyProgress.progress.setStage("Evalutating files to extract");
+		Thread copyThread = new Thread(() -> {
+			File saveDir = new File(mc.mcDataDir, "saves");
+			File target = new File(saveDir, to);
+
+			if (target.exists()) {
+				// TODO
+				System.err.println("TODO");
+				return;
+			}
+			target.mkdir();
+			try {
+				GuiCopyProgress.progress.setStage("Finding files to copy");
+				GuiCopyProgress.progress.setStep(0);
+				GuiCopyProgress.progress.setSteps(0);
+
+				FileInputStream is = new FileInputStream(worldInfo.getSaveFile());
+				ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
+				ZipEntry ze;
+
+				GuiCopyProgress.progress.setSteps((int) worldInfo.getZipFile().stream().count());
+
+				try {
+					while ((ze = zis.getNextEntry()) != null) {
+						GuiCopyProgress.progress.setStage("Exracting: " + ze.getName());
+						GuiCopyProgress.progress.next();
+
+						File f = new File(target.getCanonicalPath(), ze.getName());
+						if (ze.isDirectory()) {
+							f.mkdirs();
+							continue;
+						}
+						f.getParentFile().mkdirs();
+						OutputStream fos = new BufferedOutputStream(new FileOutputStream(f));
+						try {
+							try {
+								final byte[] buf = new byte[1024];
+								int bytesRead;
+								while (-1 != (bytesRead = zis.read(buf))) {
+									fos.write(buf, 0, bytesRead);
+								}
+							} finally {
+								fos.close();
+							}
+						} catch (final IOException ioe) {
+							f.delete();
+							throw ioe;
+						}
+					}
+				} finally {
+					zis.close();
+				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

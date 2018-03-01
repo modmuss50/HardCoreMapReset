@@ -28,8 +28,9 @@ public class TemplateSaveLoader {
 		List<WorldInfo> worldInfoList = new ArrayList<>();
 		for (File file : saveFolder.listFiles()) {
 			WorldInfo worldInfo = WorldInfo.load(file);
-			String author = "Unknown";
-
+			if(worldInfo == null){
+				continue;
+			}
 			BufferedImage bufferedImage = worldInfo.getIconImage();
 			if (bufferedImage != null) {
 				DynamicTexture texture = new DynamicTexture(bufferedImage.getWidth(), bufferedImage.getHeight());
