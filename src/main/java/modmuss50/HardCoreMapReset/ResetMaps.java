@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiWorldSelection;
 import org.apache.commons.io.FileUtils;
+import reborncore.RebornCore;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -70,6 +71,12 @@ public class ResetMaps {
 				e.printStackTrace();
 			}
 			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
+			try {
+				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), to), "level.dat"));
+			} catch (IOException e) {
+				e.printStackTrace();
+				RebornCore.logHelper.error("Failed to update lastplayed time");
+			}
 			Minecraft.getMinecraft().addScheduledTask(() -> mc.displayGuiScreen(new GuiWorldSelection(new GuiMainMenu())));
 
 		});
@@ -140,6 +147,12 @@ public class ResetMaps {
 				e.printStackTrace();
 			}
 			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
+			try {
+				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), to), "level.dat"));
+			} catch (IOException e) {
+				e.printStackTrace();
+				RebornCore.logHelper.error("Failed to update lastplayed time");
+			}
 			Minecraft.getMinecraft().addScheduledTask(() -> mc.displayGuiScreen(new GuiWorldSelection(new GuiMainMenu())));
 
 		});

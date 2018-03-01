@@ -32,7 +32,7 @@ public class WorldZip extends WorldInfo {
 			}
 
 			InputStream levelIS = zipFile.getInputStream(zipFile.getEntry("level.dat"));
-			NBTTagCompound levelDat = LevelUtils.readLevel(levelIS);
+			NBTTagCompound levelDat = LevelUtils.readLevel(levelIS).getCompoundTag("Data");
 			levelIS.close();
 
 			String worldName = levelDat.getString("LevelName");
