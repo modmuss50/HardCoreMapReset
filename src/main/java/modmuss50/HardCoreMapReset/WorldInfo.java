@@ -34,8 +34,8 @@ public abstract class WorldInfo {
 	}
 
 	public static class AuthorData {
-		String author = "No Author";
-		String thumbnail = "icon.png";
-		String description = "No Description set";
+		public String author = "No Author";
+		public String thumbnail = "icon.png";
+		public String description = "No Description set";
 	}
 }

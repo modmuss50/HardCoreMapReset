@@ -1,28 +1,19 @@
 package modmuss50.HardCoreMapReset;
 
-import net.minecraft.client.AnvilConverterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ISaveFormat;
-import net.minecraft.world.storage.SaveFormatOld;
-import net.minecraft.world.storage.WorldSummary;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class GuiMapList extends GuiScreen {
@@ -192,13 +183,8 @@ public class GuiMapList extends GuiScreen {
 			String folder = saveFormat.getSaveFile().getName();
 			String middleLine = folder;
 
-//			String mode = WordUtils.capitalize(saveFormat.getEnumGameType().getName());
-//			String cheats = saveFormat.getCheatsEnabled() ? I18n.format("selectWorld.cheats") : "";
-			String bottomLine = saveFormat.getAuthorData().description;
-
-			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 1, 16777215);
-			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 12, 8421504);
-			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, bottomLine, x + 34, y + 12 + 10, 8421504);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 5, 16777215);
+			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 17, 8421504);
 
 			if(saveLoader.imageList.containsKey(saveFormat)){
 				ResourceLocation texture = saveLoader.imageList.get(saveFormat);
