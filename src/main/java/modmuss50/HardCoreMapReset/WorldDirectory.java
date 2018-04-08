@@ -3,7 +3,6 @@ package modmuss50.HardCoreMapReset;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.client.gui.Gui;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
@@ -53,6 +52,9 @@ public class WorldDirectory extends WorldInfo {
 
 	@Override
 	public BufferedImage getIconImage() {
+		if(getAuthorData() == null || getAuthorData().thumbnail == null){
+			return null;
+		}
 		File iconFile = new File(getSaveFile(), getAuthorData().thumbnail);
 		if (!iconFile.exists()) {
 			return null;
