@@ -17,4 +17,4 @@ Network.iml
 .classpath
 /dep
 !/dep/mmc.jar
-HardCoreMap.iml
+*.iml
