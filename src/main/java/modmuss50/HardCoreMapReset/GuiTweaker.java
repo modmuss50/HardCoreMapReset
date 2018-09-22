@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiWorldSelection;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class GuiTweaker {
 			if (!newWorldButton) {
 				xPosition = (evt.getGui().width / 2);
 			}
-			GuiButton button = new GuiButton(BUTTON_ID, xPosition, yPosition, width, 20, I18n.format("gui.hardcoremapreset.create_button"));
+			GuiButton button = new GuiButtonExt(BUTTON_ID, xPosition, yPosition, width, 20, I18n.format("gui.hardcoremapreset.create_button"));
 			buttonList.add(button);
 		}
 	}
