@@ -1,9 +1,11 @@
 package modmuss50.HardCoreMapReset;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiCreateWorld;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiWorldSelection;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.Validate;
 import reborncore.RebornCore;
 
 import java.io.*;
@@ -29,18 +31,15 @@ public class ResetMaps {
 		folder.delete();
 	}
 
-	public static void copyDirWorld(WorldInfo worldInfo, String to, GuiMapList mapList) {
+	public static void copyDirWorld(WorldInfo worldInfo, String sourceName, GuiMapList mapList) {
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiCopyProgress.progress.setStage("Evalutating files to copy");
+		String name = GuiCreateWorld.getUncollidingSaveDirName(Minecraft.getMinecraft().getSaveLoader(), sourceName);
 		Thread copyThread = new Thread(() -> {
 			File saveDir = new File(mc.mcDataDir, "saves");
-			File target = new File(saveDir, to);
+			File target = new File(saveDir, name);
 			File source = worldInfo.getSaveFile();
-			if (target.exists()) {
-				// TODO
-				System.err.println("TODO");
-				return;
-			}
+			Validate.isTrue(!target.exists());
 			target.mkdir();
 			try {
 				GuiCopyProgress.progress.setStage("Finding files to copy");
@@ -72,7 +71,7 @@ public class ResetMaps {
 			}
 			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
 			try {
-				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), to), "level.dat"));
+				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), name), "level.dat"));
 			} catch (IOException e) {
 				e.printStackTrace();
 				RebornCore.logHelper.error("Failed to update lastplayed time");
@@ -84,16 +83,17 @@ public class ResetMaps {
 
 	}
 
-	public static void copyZipWorld(WorldInfo info, String to, GuiMapList mapList) {
+	public static void copyZipWorld(WorldInfo info, String sourceName, GuiMapList mapList) {
 		if (!(info instanceof WorldZip)) {
 			throw new UnsupportedOperationException();
 		}
+		String name = GuiCreateWorld.getUncollidingSaveDirName(Minecraft.getMinecraft().getSaveLoader(), sourceName);
 		WorldZip worldInfo = (WorldZip) info;
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiCopyProgress.progress.setStage("Evalutating files to extract");
 		Thread copyThread = new Thread(() -> {
 			File saveDir = new File(mc.mcDataDir, "saves");
-			File target = new File(saveDir, to);
+			File target = new File(saveDir, name);
 
 			if (target.exists()) {
 				// TODO
@@ -148,7 +148,7 @@ public class ResetMaps {
 			}
 			Minecraft.getMinecraft().getSaveLoader().renameWorld(mapList.folderString, mapList.nameField.getText().trim());
 			try {
-				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), to), "level.dat"));
+				LevelUtils.updateLastPlayed(new File(new File(new File(mc.mcDataDir, "saves"), name), "level.dat"));
 			} catch (IOException e) {
 				e.printStackTrace();
 				RebornCore.logHelper.error("Failed to update lastplayed time");

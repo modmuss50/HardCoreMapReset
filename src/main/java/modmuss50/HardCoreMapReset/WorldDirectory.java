@@ -18,7 +18,8 @@ public class WorldDirectory extends WorldInfo {
 		WorldInfo.AuthorData authorData = null;
 		File authorFile = new File(inputDir, "info.json");
 		if (!authorFile.exists()) {
-			FileUtils.writeStringToFile(authorFile, GSON.toJson(new WorldInfo.AuthorData()), Charsets.UTF_8);
+			authorData = new WorldInfo.AuthorData();
+			FileUtils.writeStringToFile(authorFile, GSON.toJson(authorData), Charsets.UTF_8);
 		} else {
 			authorData = GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), WorldInfo.AuthorData.class);
 		}
@@ -70,5 +71,10 @@ public class WorldDirectory extends WorldInfo {
 	@Override
 	public void copy(GuiMapList mapList) {
 		ResetMaps.copyDirWorld(this, mapList.folderString, mapList);
+	}
+
+	@Override
+	public boolean valid() {
+		return new File(getSaveFile(), "level.dat").exists();
 	}
 }

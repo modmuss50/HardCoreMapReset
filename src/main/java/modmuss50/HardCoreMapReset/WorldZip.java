@@ -89,6 +89,11 @@ public class WorldZip extends WorldInfo {
 		ResetMaps.copyZipWorld(this, mapList.folderString, mapList);
 	}
 
+	@Override
+	public boolean valid() {
+		return true; //TODO check the contents of the file?
+	}
+
 	public ZipFile getZipFile() {
 		return zipFile;
 	}

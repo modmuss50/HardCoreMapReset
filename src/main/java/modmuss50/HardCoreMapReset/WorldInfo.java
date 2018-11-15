@@ -18,6 +18,8 @@ public abstract class WorldInfo {
 
 	public abstract void copy(GuiMapList mapList);
 
+	public abstract boolean valid();
+
 	public static WorldInfo load(File inputFile) {
 		if (inputFile.isDirectory()) {
 			try {

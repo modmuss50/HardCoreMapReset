@@ -18,6 +18,9 @@ public class TemplateSaveLoader {
 
 	public TemplateSaveLoader(File save_folder) {
 		this.saveFolder = save_folder;
+		if(!save_folder.exists()){
+			save_folder.mkdir();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -26,6 +29,9 @@ public class TemplateSaveLoader {
 		imageList.clear();
 
 		List<WorldInfo> worldInfoList = new ArrayList<>();
+		if(saveFolder.listFiles() == null){
+			return worldInfoList;
+		}
 		for (File file : saveFolder.listFiles()) {
 			WorldInfo worldInfo = WorldInfo.load(file);
 			if(worldInfo == null){

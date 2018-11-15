@@ -68,7 +68,10 @@ public class GuiMapList extends GuiScreen {
 		if (guiButton.id == CANCEL_BUTTON_ID) {
 			Minecraft.getMinecraft().displayGuiScreen(parent);
 		} else if (guiButton.id == CREATE_BUTTON_ID) {
-			createMap();
+			WorldInfo saveFormat = GuiMapList.this.saveList.get(selectedSlot);
+			if(saveFormat.valid()){
+				createMap();
+			}
 		}
 		mapList.actionPerformed(guiButton);
 	}
@@ -146,8 +149,11 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.selectedSlot = slot;
 			GuiMapList.this.createButton.enabled = true;
 
-			if (doubleClicked) {
-				GuiMapList.this.createMap();
+			WorldInfo saveFormat = GuiMapList.this.saveList.get(slot);
+			if(saveFormat.valid()){
+				if (doubleClicked) {
+					GuiMapList.this.createMap();
+				}
 			}
 		}
 
@@ -182,6 +188,10 @@ public class GuiMapList extends GuiScreen {
 
 			String folder = saveFormat.getSaveFile().getName();
 			String middleLine = folder;
+
+			if(!saveFormat.valid()){
+				middleLine += "   " + TextFormatting.RED + " no level.dat file found!";
+			}
 
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 5, 16777215);
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, middleLine, x + 34, y + 17, 8421504);
