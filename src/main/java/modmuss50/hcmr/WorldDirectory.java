@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public class WorldDirectory extends WorldInfo {
 
@@ -74,7 +75,10 @@ public class WorldDirectory extends WorldInfo {
 	}
 
 	@Override
-	public boolean valid() {
-		return new File(getSaveFile(), "level.dat").exists();
+	public Optional<String> valid() {
+		if(new File(getSaveFile(), "level.dat").exists()){
+			return Optional.empty();
+		}
+		return Optional.of("level.dat not found!");
 	}
 }

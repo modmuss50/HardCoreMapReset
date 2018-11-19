@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -69,7 +69,7 @@ public class GuiMapList extends GuiScreen {
 			Minecraft.getMinecraft().displayGuiScreen(parent);
 		} else if (guiButton.id == CREATE_BUTTON_ID) {
 			WorldInfo saveFormat = GuiMapList.this.saveList.get(selectedSlot);
-			if(saveFormat.valid()){
+			if(!saveFormat.valid().isPresent()){
 				createMap();
 			}
 		}
@@ -150,7 +150,7 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.createButton.enabled = true;
 
 			WorldInfo saveFormat = GuiMapList.this.saveList.get(slot);
-			if(saveFormat.valid()){
+			if(!saveFormat.valid().isPresent()){
 				if (doubleClicked) {
 					GuiMapList.this.createMap();
 				}
@@ -189,8 +189,8 @@ public class GuiMapList extends GuiScreen {
 			String folder = saveFormat.getSaveFile().getName();
 			String middleLine = folder;
 
-			if(!saveFormat.valid()){
-				middleLine += "   " + TextFormatting.RED + " no level.dat file found!";
+			if(saveFormat.valid().isPresent()){
+				middleLine += "   " + TextFormatting.RED + saveFormat.valid().get();
 			}
 
 			GuiMapList.this.drawString(GuiMapList.this.fontRenderer, topLine, x + 34, y + 5, 16777215);

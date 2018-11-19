@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

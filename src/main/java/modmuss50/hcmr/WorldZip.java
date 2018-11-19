@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -90,8 +91,8 @@ public class WorldZip extends WorldInfo {
 	}
 
 	@Override
-	public boolean valid() {
-		return true; //TODO check the contents of the file?
+	public Optional<String> valid() {
+		return Optional.empty();
 	}
 
 	public ZipFile getZipFile() {

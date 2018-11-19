@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -18,7 +18,7 @@ public class GuiTweaker {
 	@SubscribeEvent()
 	public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post evt) {
 		if (evt.getGui() instanceof GuiWorldSelection) {
-			MapReset.INSTANCE.reLoadConfig();
+			HardCoreMapReset.INSTANCE.reLoadConfig();
 			List<GuiButton> buttonList = evt.getButtonList();
 			ArrayList<Integer> buttonIDList = new ArrayList<Integer>();
 
@@ -26,7 +26,7 @@ public class GuiTweaker {
 			int width = (evt.getGui().width - 48) / 3;
 			int yPosition = 1;
 
-			boolean newWorldButton = MapReset.showCreateWorld;
+			boolean newWorldButton = HardCoreMapReset.showCreateWorld;
 
 			boolean used = false;
 			for (GuiButton button : buttonList) {

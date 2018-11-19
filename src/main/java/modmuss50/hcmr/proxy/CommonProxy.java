@@ -1,4 +1,4 @@
-package modmuss50.HardCoreMapReset.proxy;
+package modmuss50.hcmr.proxy;
 
 public class CommonProxy {
 

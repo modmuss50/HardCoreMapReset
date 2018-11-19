@@ -1,6 +1,7 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
-import modmuss50.HardCoreMapReset.proxy.CommonProxy;
+import modmuss50.hcmr.proxy.CommonProxy;
+import modmuss50.hcmr.voidWorld.HCMRWorldTypes;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -8,22 +9,22 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import reborncore.common.IModInfo;
 
 import java.io.File;
 
 @Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "@MODVERSION@", acceptableRemoteVersions = "*", dependencies = "required-after:reborncore")
-public class MapReset {
+public class HardCoreMapReset {
 
-	@SidedProxy(clientSide = "modmuss50.HardCoreMapReset.proxy.ClientProxy", serverSide = "modmuss50.HardCoreMapReset.proxy.CommonProxy")
+	@SidedProxy(clientSide = "modmuss50.hcmr.proxy.ClientProxy", serverSide = "modmuss50.hcmr.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.Instance
-	public static MapReset INSTANCE;
+	public static HardCoreMapReset INSTANCE;
 
 	public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hardcoremapreset");
 
 	public static boolean showCreateWorld;
+	public static boolean voidWorldGeneration;
 
 	Configuration config;
 
@@ -37,6 +38,7 @@ public class MapReset {
 	public void reLoadConfig() {
 		config.load();
 		showCreateWorld = config.get(Configuration.CATEGORY_GENERAL, "Show Create World Button", true).getBoolean();
+		voidWorldGeneration = config.get(Configuration.CATEGORY_GENERAL, "Enabled Void World Generation (Required for structure based temapltes)", false).getBoolean();
 		config.save();
 	}
 
@@ -44,5 +46,8 @@ public class MapReset {
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event) {
 		proxy.init();
+		if(voidWorldGeneration){
+			HCMRWorldTypes.init();
+		}
 	}
 }

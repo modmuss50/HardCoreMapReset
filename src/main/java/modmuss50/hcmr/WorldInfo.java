@@ -1,10 +1,11 @@
-package modmuss50.HardCoreMapReset;
+package modmuss50.hcmr;
 
 import reborncore.RebornCore;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public abstract class WorldInfo {
 
@@ -18,15 +19,29 @@ public abstract class WorldInfo {
 
 	public abstract void copy(GuiMapList mapList);
 
-	public abstract boolean valid();
+	public abstract Optional<String> valid();
 
 	public static WorldInfo load(File inputFile) {
 		if (inputFile.isDirectory()) {
-			try {
-				return WorldDirectory.loadDir(inputFile);
-			} catch (IOException e) {
-				e.printStackTrace();
+			File levelData = new File(inputFile, "level.dat");
+			File structure = new File(inputFile, "structure.nbt");
+			if(levelData.exists()){
+				try {
+					return WorldDirectory.loadDir(inputFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (structure.exists()){
+				try {
+					return WorldStructure.loadStructure(inputFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				RebornCore.logHelper.error(inputFile.getName() + " is not supported!");
+				return null;
 			}
+
 		}
 		if(inputFile.getName().endsWith(".zip")){
 			return WorldZip.loadZip(inputFile);

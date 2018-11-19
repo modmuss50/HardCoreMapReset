@@ -1,6 +1,6 @@
-package modmuss50.HardCoreMapReset.proxy;
+package modmuss50.hcmr.proxy;
 
-import modmuss50.HardCoreMapReset.GuiTweaker;
+import modmuss50.hcmr.GuiTweaker;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
