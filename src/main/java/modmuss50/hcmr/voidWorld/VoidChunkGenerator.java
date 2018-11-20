@@ -8,6 +8,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
+import net.minecraft.world.gen.structure.template.Template;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,12 +38,14 @@ public class VoidChunkGenerator implements IChunkGenerator {
 	@Override
 	public void populate(int x, int z) {
 		if(x == 0 && z == 0){
-			System.out.println("Spawning structure :D");
-			world.setBlockState(new BlockPos(0, 93, 0), Blocks.STONE.getDefaultState());
-
 			if(HCMRWorldTypes.structure != null){
+				Template template = TemplateUtils.read(HCMRWorldTypes.structure);
+				Pair<Template, BlockPos> templatePair = TemplateUtils.getTemplateWithSpawn(template);
+				templatePair.getLeft().addBlocksToWorld(world, new BlockPos(0, 96, 0).subtract(templatePair.getRight()), new PlacementSettings());
 
 				HCMRWorldTypes.structure = null;
+			} else {
+				world.setBlockState(new BlockPos(0, 93, 0), Blocks.STONE.getDefaultState());
 			}
 		}
 	}

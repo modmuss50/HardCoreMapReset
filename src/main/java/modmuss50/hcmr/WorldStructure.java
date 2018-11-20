@@ -23,21 +23,34 @@ public class WorldStructure extends WorldInfo {
 
 
 	public static WorldStructure loadStructure(File inputDir) throws IOException {
-		WorldInfo.AuthorData authorData = null;
+		StrctureInfo strctureInfo;
 		File authorFile = new File(inputDir, "info.json");
 		if (!authorFile.exists()) {
-			authorData = new WorldInfo.AuthorData();
-			FileUtils.writeStringToFile(authorFile, GSON.toJson(authorData), Charsets.UTF_8);
+			strctureInfo = new StrctureInfo();
+			FileUtils.writeStringToFile(authorFile, GSON.toJson(strctureInfo), Charsets.UTF_8);
 		} else {
-			authorData = GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), WorldInfo.AuthorData.class);
+			strctureInfo = GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), StrctureInfo.class);
 		}
+		File structureFile = new File(inputDir, strctureInfo.structureFile);
 		WorldStructure worldDirectory = new WorldStructure();
-		//TODO get better worldName
 		worldDirectory.name = inputDir.getName();
-		worldDirectory.author = authorData;
-		worldDirectory.structureFile = inputDir;
+		worldDirectory.author = strctureInfo;
+		worldDirectory.structureFile = structureFile;
 
 		return worldDirectory;
+	}
+
+	public static String getStructureFileName(File dir){
+		File authorFile = new File(dir, "info.json");
+		if(!authorFile.exists()){
+			return "structure.nbt";
+		}
+		try {
+			return GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), StrctureInfo.class).structureFile;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "structure.nbt";
+		}
 	}
 
 	@Override
@@ -85,5 +98,9 @@ public class WorldStructure extends WorldInfo {
 			return Optional.empty();
 		}
 		return Optional.of("Enable void world generation in config!");
+	}
+
+	public static class StrctureInfo extends WorldInfo.AuthorData {
+		public String structureFile = "structure.nbt";
 	}
 }

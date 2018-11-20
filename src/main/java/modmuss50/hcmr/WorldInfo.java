@@ -24,7 +24,7 @@ public abstract class WorldInfo {
 	public static WorldInfo load(File inputFile) {
 		if (inputFile.isDirectory()) {
 			File levelData = new File(inputFile, "level.dat");
-			File structure = new File(inputFile, "structure.nbt");
+			File structure = new File(inputFile, WorldStructure.getStructureFileName(inputFile));
 			if(levelData.exists()){
 				try {
 					return WorldDirectory.loadDir(inputFile);
@@ -46,7 +46,7 @@ public abstract class WorldInfo {
 		if(inputFile.getName().endsWith(".zip")){
 			return WorldZip.loadZip(inputFile);
 		}
-		RebornCore.logHelper.error(inputFile.getName() + " is not supported!");
+		RebornCore.logHelper.error(inputFile.getName() + " is not a valid template file!");
 		return null;
 	}
 
