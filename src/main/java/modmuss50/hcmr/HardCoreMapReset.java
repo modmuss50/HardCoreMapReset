@@ -25,8 +25,6 @@ public class HardCoreMapReset {
 
 	public static boolean showCreateWorld;
 	public static boolean voidWorldGeneration;
-	public static String markerBlcok;
-
 	Configuration config;
 
 	@Mod.EventHandler
@@ -40,7 +38,6 @@ public class HardCoreMapReset {
 		config.load();
 		showCreateWorld = config.get(Configuration.CATEGORY_GENERAL, "Show Create World Button", true).getBoolean();
 		voidWorldGeneration = config.get(Configuration.CATEGORY_GENERAL, "Enabled Void World Generation (Required for structure based temapltes)", false).getBoolean();
-		markerBlcok = config.get(Configuration.CATEGORY_GENERAL, "Block to be used as spawn marker", "minecraft:diamond_block").getString();
 		config.save();
 	}
 
