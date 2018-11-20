@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 import java.io.File;
 
-@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "@MODVERSION@", acceptableRemoteVersions = "*", dependencies = "required-after:reborncore")
+@Mod(modid = "hardcoremapreset", name = "HardcoreMapReset", version = "@MODVERSION@", acceptableRemoteVersions = "*", dependencies = "required-after:reborncore;after:yunomakegoodmap")
 public class HardCoreMapReset {
 
 	@SidedProxy(clientSide = "modmuss50.hcmr.proxy.ClientProxy", serverSide = "modmuss50.hcmr.proxy.CommonProxy")
