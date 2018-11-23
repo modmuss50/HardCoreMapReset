@@ -1,6 +1,7 @@
 /run
 /HardCoreMapReset.ipr
 /HardCoreMapReset.iml
+*.iws
 /bin
 /.idea
 /.gradle
