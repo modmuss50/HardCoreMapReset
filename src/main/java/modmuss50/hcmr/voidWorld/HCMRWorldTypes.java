@@ -27,6 +27,9 @@ public class HCMRWorldTypes {
 		//Replaces the world provider with one that uses an exact spawn location
 		DimensionManager.unregisterDimension(0);
 		DimensionManager.registerDimension(0, DimensionType.register("Overworld", "", 0, WorldProviderVoid.class, true));
+
+		DimensionManager.unregisterDimension(-1);
+		DimensionManager.registerDimension(-1, DimensionType.register("Nether", "", -1, WorldProviderVoidNether.class, false));
 	}
 
 	public static void createNewVoidWorld(String folderName, String worldName, File structure_input){
