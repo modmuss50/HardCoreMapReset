@@ -30,9 +30,11 @@ public class GuiMapList extends GuiScreen {
 	private int selectedSlot;
 	public String folderString;
 	private static final String[] portNames = new String[]{"CON", "COM", "PRN", "AUX", "CLOCK$", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
+	private File dir;
 
-	public GuiMapList(GuiScreen parent) {
+	public GuiMapList(GuiScreen parent, File dir) {
 		this.parent = parent;
+		this.dir = dir;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -43,20 +45,29 @@ public class GuiMapList extends GuiScreen {
 		initSaveList();
 		this.nameField = new GuiTextField(0, this.fontRenderer, this.width / 2 - 100, 45, 200, 20);
 		this.nameField.setFocused(true);
-		this.nameField.setText(I18n.format("selectWorld.newWorld"));
+		if(parent instanceof GuiMapList){
+			this.nameField.setText(((GuiMapList) parent).nameField.getText());
+		} else {
+			this.nameField.setText(I18n.format("selectWorld.newWorld"));
+		}
+
 		sanitizeFolderName();
 
 		this.mapList = new MapList();
 
 		this.buttonList.add(this.createButton = new GuiButton(CREATE_BUTTON_ID, this.width / 2 - 155, this.height - 28, 150, 20, I18n.format("selectWorld.create")));
-		this.buttonList.add(new GuiButton(CANCEL_BUTTON_ID, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format("gui.cancel")));
+		String cancelButtonText = "gui.cancel";
+		if(parent instanceof GuiMapList){
+			cancelButtonText = "gui.back";
+		}
+		this.buttonList.add(new GuiButton(CANCEL_BUTTON_ID, this.width / 2 + 5, this.height - 28, 150, 20, I18n.format(cancelButtonText)));
 		this.createButton.enabled = false;
 	}
 
 
 	private void initSaveList() {
 		if (saveLoader == null) {
-			saveLoader = new TemplateSaveLoader(new File(Minecraft.getMinecraft().mcDataDir, "maps"));
+			saveLoader = new TemplateSaveLoader(dir);
 		}
 		this.saveList = saveLoader.getSaveList();
 		this.selectedSlot = -1;
@@ -185,6 +196,9 @@ public class GuiMapList extends GuiScreen {
 			String author = saveFormat.getAuthorData().author;
 			String by = I18n.format("gui.hardcoremapreset.by");
 			String topLine = displayName + ", " + TextFormatting.ITALIC + TextFormatting.BOLD + by + TextFormatting.RESET + ": " + author;
+			if(parent instanceof GuiMapList){
+				topLine = displayName;
+			}
 
 			String folder = saveFormat.getSaveFile().getName();
 			String middleLine = folder;

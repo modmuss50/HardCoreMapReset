@@ -8,6 +8,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class GuiTweaker {
 	public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent evt) {
 		if (evt.getGui() instanceof GuiWorldSelection) {
 			if (evt.getButton().id == BUTTON_ID) {
-				Minecraft.getMinecraft().displayGuiScreen(new GuiMapList(evt.getGui()));
+				Minecraft.getMinecraft().displayGuiScreen(new GuiMapList(evt.getGui(), new File(Minecraft.getMinecraft().mcDataDir, "maps")));
 			}
 		}
 	}

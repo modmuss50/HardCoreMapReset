@@ -24,8 +24,15 @@ public abstract class WorldInfo {
 	public static WorldInfo load(File inputFile) {
 		if (inputFile.isDirectory()) {
 			File levelData = new File(inputFile, "level.dat");
+			File variations = new File(inputFile, "variations.json");
 			File structure = new File(inputFile, WorldStructure.getStructureFileName(inputFile));
-			if(levelData.exists()){
+			if(variations.exists()){
+				try {
+					return WorldVariations.loadDir(inputFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}else if(levelData.exists()){
 				try {
 					return WorldDirectory.loadDir(inputFile);
 				} catch (IOException e) {
