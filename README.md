@@ -2,4 +2,4 @@
 HardCoreMapReset
 =======
 See the master branch for 1.12.2
-See the 1.7 brach for 1.7.10
+See the 1.7 branch for 1.7.10
