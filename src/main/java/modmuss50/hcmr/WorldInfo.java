@@ -60,6 +60,7 @@ public abstract class WorldInfo {
 	public static class AuthorData {
 		public String author = "No Author";
 		public String thumbnail = "icon.png";
-		public String description = "No Description set";
+		public String description = "";
+		public int sort = 0;
 	}
 }

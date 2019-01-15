@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 
 public class GuiMapList extends GuiScreen {
@@ -70,6 +71,7 @@ public class GuiMapList extends GuiScreen {
 			saveLoader = new TemplateSaveLoader(dir);
 		}
 		this.saveList = saveLoader.getSaveList();
+		saveList.sort(Comparator.comparingInt(o -> o.getAuthorData().sort));
 		this.selectedSlot = -1;
 	}
 
@@ -200,8 +202,7 @@ public class GuiMapList extends GuiScreen {
 				topLine = displayName;
 			}
 
-			String folder = saveFormat.getSaveFile().getName();
-			String middleLine = folder;
+			String middleLine = saveFormat.getAuthorData().description;
 
 			if(saveFormat.valid().isPresent()){
 				middleLine += "   " + TextFormatting.RED + saveFormat.valid().get();
