@@ -41,7 +41,7 @@ public class HCMRWorldTypes {
 		structure = structure_input; //Sets the structure file so the world generator can be used to palce this at a later date.
 
 		//New world setup for a void world
-		WorldSettings worldsettings = new WorldSettings(seed, GameType.SURVIVAL, false, false, VOID_TYPE);
+		WorldSettings worldsettings = new WorldSettings(seed, GameType.SURVIVAL, true, false, VOID_TYPE);
 		minecraft.launchIntegratedServer(folderName, worldName, worldsettings);
 	}
 
