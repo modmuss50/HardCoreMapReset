@@ -20,6 +20,7 @@ public class WorldStructure extends WorldInfo {
 	private String name;
 	private AuthorData author;
 	private File structureFile;
+	private File dir;
 
 
 	public static WorldStructure loadStructure(File inputDir) throws IOException {
@@ -32,12 +33,13 @@ public class WorldStructure extends WorldInfo {
 			strctureInfo = GSON.fromJson(FileUtils.readFileToString(authorFile, Charsets.UTF_8), StrctureInfo.class);
 		}
 		File structureFile = new File(inputDir, strctureInfo.structureFile);
-		WorldStructure worldDirectory = new WorldStructure();
-		worldDirectory.name = inputDir.getName();
-		worldDirectory.author = strctureInfo;
-		worldDirectory.structureFile = structureFile;
+		WorldStructure structure = new WorldStructure();
+		structure.name = inputDir.getName();
+		structure.author = strctureInfo;
+		structure.structureFile = structureFile;
+		structure.dir = inputDir;
 
-		return worldDirectory;
+		return structure;
 	}
 
 	public static String getStructureFileName(File dir){
@@ -73,7 +75,7 @@ public class WorldStructure extends WorldInfo {
 		if(getAuthorData() == null || getAuthorData().thumbnail == null){
 			return null;
 		}
-		File iconFile = new File(getSaveFile(), getAuthorData().thumbnail);
+		File iconFile = new File(dir, getAuthorData().thumbnail);
 		if (!iconFile.exists()) {
 			return null;
 		}

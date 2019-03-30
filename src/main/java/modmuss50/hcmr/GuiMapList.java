@@ -162,7 +162,15 @@ public class GuiMapList extends GuiScreen {
 			GuiMapList.this.selectedSlot = slot;
 			GuiMapList.this.createButton.enabled = true;
 
+
 			WorldInfo saveFormat = GuiMapList.this.saveList.get(slot);
+
+			if(saveFormat instanceof WorldVariations){
+				GuiMapList.this.createButton.displayString = "Open Folder";
+			} else {
+				GuiMapList.this.createButton.displayString = I18n.format("selectWorld.create");
+			}
+
 			if(!saveFormat.valid().isPresent()){
 				if (doubleClicked) {
 					GuiMapList.this.createMap();
