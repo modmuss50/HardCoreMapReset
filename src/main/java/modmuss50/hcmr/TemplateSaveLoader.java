@@ -42,7 +42,7 @@ public class TemplateSaveLoader {
 				DynamicTexture texture = new DynamicTexture(bufferedImage.getWidth(), bufferedImage.getHeight());
 				bufferedImage.getRGB(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), texture.getTextureData(), 0, bufferedImage.getWidth());
 				texture.updateDynamicTexture();
-				ResourceLocation resourceLocation = new ResourceLocation("hcmr", "icon/" + worldInfo.getSaveFile().getName() + "/icon");
+				ResourceLocation resourceLocation = new ResourceLocation("hcmr", "icon/" + worldInfo.toString() + "/icon");
 				Minecraft.getMinecraft().getTextureManager().loadTexture(resourceLocation, texture);
 				imageList.put(worldInfo, resourceLocation);
 			}
